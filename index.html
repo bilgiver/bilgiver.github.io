@@ -1,14 +1,46 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Canlı Döviz Kurları</title>
+    <title>Canlı Dolar Kuru</title>
 </head>
 <body>
-  <h1>Bugünkü Döviz Kurları (TCMB)</h1>
-  <div id="usd"></div>
-  <div id="eur"></div>
 
-  <script src="script.js"></script>
+    <h1>Canlı Dolar Kuru</h1>
+    <p>Son Güncelleme: <span id="son-guncelleme"></span></p>
+
+    <div id="kur-bilgisi">
+        <p>Yükleniyor...</p>
+    </div>
+
+    <script>
+        const xmlUrl = 'https://www.tcmb.gov.tr/kurlar/today.xml';
+
+        fetch(xmlUrl)
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data, 'text/xml');
+                const usdKur = xmlDoc.querySelector('Currency[Kod="USD"]');
+                
+                if (usdKur) {
+                    const forexBuying = usdKur.querySelector('ForexBuying').textContent;
+                    const forexSelling = usdKur.querySelector('ForexSelling').textContent;
+                    const date = xmlDoc.querySelector('Tarih_Date').getAttribute('Tarih');
+
+                    document.getElementById('kur-bilgisi').innerHTML = `
+                        <p><strong>Döviz Alış:</strong> ${forexBuying} TL</p>
+                        <p><strong>Döviz Satış:</strong> ${forexSelling} TL</p>
+                    `;
+                    document.getElementById('son-guncelleme').textContent = date;
+                } else {
+                    document.getElementById('kur-bilgisi').innerHTML = '<p>Dolar kuru bilgisi bulunamadı.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Veri çekme hatası:', error);
+                document.getElementById('kur-bilgisi').innerHTML = '<p>Döviz kurları alınırken bir hata oluştu.</p>';
+            });
+    </script>
+
 </body>
 </html>
