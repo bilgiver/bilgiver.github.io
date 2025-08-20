@@ -12,60 +12,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          
-      - name: Install dependencies
-        run: npm install jsdom
-
-      - name: Fetch and parse XML to JSON
-        id: fetch_xml
+      - name: Fetch XML and convert to JSON
         run: |
+          xml_content=$(curl -s https://tcmb.org.tr/kurlar/today.xml)
+          
+          # XML içeriğini işlemek için basit bir betik
           node -e "
             const { JSDOM } = require('jsdom');
             const fs = require('fs');
-            
-            const xmlUrl = 'https://tcmb.org.tr/kurlar/today.xml';
+            const xmlData = \`$xml_content\`;
 
-            async function fetchAndParse() {
-                try {
-                    const response = await fetch(xmlUrl);
-                    if (!response.ok) {
-                        throw new Error(\`Ağ hatası: \${response.status} \${response.statusText}\`);
-                    }
-                    const xmlData = await response.text();
+            try {
+              const parser = new JSDOM().window.DOMParser;
+              const xmlDoc = parser.parseFromString(xmlData, 'text/xml');
+              
+              if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+                console.error('XML parse hatası.');
+                process.exit(1);
+              }
 
-                    const parser = new JSDOM().window.DOMParser;
-                    const xmlDoc = parser.parseFromString(xmlData, 'text/xml');
-                    
-                    if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
-                      throw new Error('XML dosyasında parse hatası.');
-                    }
-
-                    const currencies = xmlDoc.getElementsByTagName('Currency');
-                    const rates = {};
-                    
-                    for (const currency of currencies) {
-                        const code = currency.getAttribute('CurrencyCode');
-                        if (code === 'USD' || code === 'EUR') {
-                            rates[code] = {
-                                name: currency.getElementsByTagName('Isim')[0].textContent,
-                                buying: currency.getElementsByTagName('ForexBuying')[0].textContent,
-                                selling: currency.getElementsByTagName('ForexSelling')[0].textContent
-                            };
-                        }
-                    }
-                    
-                    fs.writeFileSync('data/exchange_rates.json', JSON.stringify(rates, null, 2));
-                    console.log('Döviz kurları başarıyla güncellendi!');
-                } catch (error) {
-                    console.error('Hata:', error);
-                    process.exit(1);
-                }
+              const currencies = xmlDoc.getElementsByTagName('Currency');
+              const rates = {};
+              
+              for (const currency of currencies) {
+                  const code = currency.getAttribute('CurrencyCode');
+                  if (code === 'USD' || code === 'EUR') {
+                      rates[code] = {
+                          name: currency.getElementsByTagName('Isim')[0].textContent,
+                          buying: currency.getElementsByTagName('ForexBuying')[0].textContent,
+                          selling: currency.getElementsByTagName('ForexSelling')[0].textContent
+                      };
+                  }
+              }
+              
+              fs.writeFileSync('data/exchange_rates.json', JSON.stringify(rates, null, 2));
+              console.log('Döviz kurları başarıyla güncellendi!');
+            } catch (error) {
+              console.error('Hata:', error);
+              process.exit(1);
             }
-            fetchAndParse();
           "
 
       - name: Commit changes
