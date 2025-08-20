@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCMB Döviz Kurları</title>
+    <style>
+        /* CSS kodları aynı kalabilir */
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>TCMB Güncel Döviz Kurları</h1>
+    <p>Veriler <a href="https://tcmb.org.tr/" target="_blank">Türkiye Cumhuriyet Merkez Bankası</a>'ndan alınmıştır.</p>
+    <div id="loading">Yükleniyor...</div>
+    <div id="error"></div>
+    <ul id="currency-list">
+        </ul>
+</div>
+
+<script>
+    // Vekil sunucu kullanmadan kendi deponuzdaki JSON dosyasını çekin
+    const dataUrl = './data/exchange_rates.json'; 
+    const currencyListElement = document.getElementById('currency-list');
+    const loadingElement = document.getElementById('loading');
+    const errorElement = document.getElementById('error');
+
+    async function getExchangeRates() {
+        loadingElement.style.display = 'block';
+        errorElement.textContent = '';
+        currencyListElement.innerHTML = '';
+
+        try {
+            const response = await fetch(dataUrl);
+            if (!response.ok) {
+                throw new Error(`Veri dosyası bulunamadı: ${response.status}`);
+            }
+            
+            const rates = await response.json();
+            
+            if (Object.keys(rates).length === 0) {
+                 throw new Error("Döviz kuru bilgisi bulunamadı.");
+            }
+
+            for (const code in rates) {
+                const rate = rates[code];
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span class="currency">${rate.name} (${code})</span>
+                    <span class="rate">
+                        Alış: ${rate.buying} TL<br>
+                        Satış: ${rate.selling} TL
+                    </span>
+                `;
+                currencyListElement.appendChild(listItem);
+            }
+
+        } catch (error) {
+            console.error('Hata:', error);
+            errorElement.textContent = `Hata oluştu. Detay: ${error.message}`;
+        } finally {
+            loadingElement.style.display = 'none';
+        }
+    }
+
+    getExchangeRates();
+</script>
+
+</body>
+</html>
