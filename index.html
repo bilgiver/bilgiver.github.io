@@ -2,9 +2,9 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Döviz Kurları Paneli</title>
+  <title>TCMB Döviz Kurları Paneli</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
     h1 { color: #333; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-  <h1>Güncel Döviz Kurları (TCMB)</h1>
+  <h1>Bugünkü TCMB Döviz Kurları</h1>
   <table id="kurTablosu">
     <thead>
       <tr>
@@ -26,8 +26,7 @@
 
   <script>
     async function kurlariGetir() {
-      const tarih = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-      const url = `https://www.tcmb.gov.tr/kurlar/${tarih}.xml`;
+      const url = "https://www.tcmb.gov.tr/kurlar/today.xml";
 
       try {
         const response = await fetch(url);
@@ -35,7 +34,7 @@
         const parser = new DOMParser();
         const xml = parser.parseFromString(text, "application/xml");
 
-        const kurlar = ["USD", "EUR", "GBP"];
+        const kurlar = ["USD", "EUR", "GBP", "CHF", "JPY", "SAR"];
         const tablo = document.querySelector("#kurTablosu tbody");
         tablo.innerHTML = "";
 
