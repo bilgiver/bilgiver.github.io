@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
+      background-color: #f0f0f0;
       padding: 20px;
     }
     h1 {
@@ -21,27 +21,27 @@
     }
     th, td {
       border: 1px solid #ccc;
-      padding: 12px;
+      padding: 10px;
       text-align: center;
     }
     th {
-      background-color: #eee;
+      background-color: #e0e0e0;
     }
     .error {
-      text-align: center;
       color: red;
+      text-align: center;
       margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Güncel TCMB Döviz Kurları</h1>
+  <h1>Bugünkü TCMB Döviz Kurları</h1>
   <table id="kurTablosu">
     <thead>
       <tr>
         <th>Döviz</th>
-        <th>Alış</th>
-        <th>Satış</th>
+        <th>Alış (TL)</th>
+        <th>Satış (TL)</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -54,37 +54,28 @@
 
       try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Bağlantı hatası");
+        if (!response.ok) throw new Error("Veri alınamadı");
 
         const xmlText = await response.text();
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "application/xml");
 
-        const kurlar = ["USD", "EUR", "GBP", "CHF", "JPY", "SAR"];
+        const kurlar = [
+          { kod: "USD", ad: "ABD DOLARI" },
+          { kod: "EUR", ad: "EURO" },
+          { kod: "GBP", ad: "İNGİLİZ STERLİNİ" },
+          { kod: "CHF", ad: "İSVİÇRE FRANGI" },
+          { kod: "JPY", ad: "JAPON YENİ", birim: 100 },
+          { kod: "SAR", ad: "SUUDİ ARABİSTAN RİYALİ" }
+        ];
+
         const tablo = document.querySelector("#kurTablosu tbody");
         tablo.innerHTML = "";
 
-        kurlar.forEach(kod => {
+        kurlar.forEach(({ kod, ad, birim }) => {
           const kur = xmlDoc.querySelector(`Currency[CurrencyCode="${kod}"]`);
           if (kur) {
             const alis = kur.querySelector("ForexBuying").textContent;
             const satis = kur.querySelector("ForexSelling").textContent;
             tablo.innerHTML += `
               <tr>
-                <td>${kod}</td>
-                <td>${parseFloat(alis).toFixed(4)}</td>
-                <td>${parseFloat(satis).toFixed(4)}</td>
-              </tr>
-            `;
-          }
-        });
-      } catch (error) {
-        document.getElementById("hataMesaji").textContent = "Veri alınamadı. Lütfen daha sonra tekrar deneyin.";
-        console.error("Hata:", error);
-      }
-    }
-
-    kurlariGetir();
-  </script>
-</body>
-</html>
