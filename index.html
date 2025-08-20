@@ -1,81 +1,133 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>TCMB Döviz Kurları Paneli</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background-color: #fff;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: #e0e0e0;
-    }
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCMB Döviz Kurları</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        .currency {
+            font-weight: bold;
+        }
+        .rate {
+            color: #555;
+        }
+        #loading {
+            text-align: center;
+            color: #888;
+        }
+        #error {
+            text-align: center;
+            color: #d9534f;
+        }
+    </style>
 </head>
 <body>
-  <h1>Bugünkü TCMB Döviz Kurları</h1>
-  <table id="kurTablosu">
-    <thead>
-      <tr>
-        <th>Döviz</th>
-        <th>Alış (TL)</th>
-        <th>Satış (TL)</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <div class="error" id="hataMesaji"></div>
 
-  <script>
-    async function kurlariGetir() {
-      const url = "https://www.tcmb.gov.tr/kurlar/today.xml";
+<div class="container">
+    <h1>TCMB Güncel Döviz Kurları</h1>
+    <p>Veriler <a href="https://tcmb.org.tr/" target="_blank">Türkiye Cumhuriyet Merkez Bankası</a>'ndan alınmıştır.</p>
+    <div id="loading">Yükleniyor...</div>
+    <div id="error"></div>
+    <ul id="currency-list">
+        </ul>
+</div>
 
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Veri alınamadı");
+<script>
+    const tcmbApiUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://tcmb.org.tr/kurlar/today.xml');
+    const currencyListElement = document.getElementById('currency-list');
+    const loadingElement = document.getElementById('loading');
+    const errorElement = document.getElementById('error');
 
-        const xmlText = await response.text();
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+    async function getExchangeRates() {
+        loadingElement.style.display = 'block';
+        errorElement.textContent = '';
+        currencyListElement.innerHTML = '';
 
-        const kurlar = [
-          { kod: "USD", ad: "ABD DOLARI" },
-          { kod: "EUR", ad: "EURO" },
-          { kod: "GBP", ad: "İNGİLİZ STERLİNİ" },
-          { kod: "CHF", ad: "İSVİÇRE FRANGI" },
-          { kod: "JPY", ad: "JAPON YENİ", birim: 100 },
-          { kod: "SAR", ad: "SUUDİ ARABİSTAN RİYALİ" }
-        ];
+        try {
+            const response = await fetch(tcmbApiUrl);
+            if (!response.ok) {
+                throw new Error(`Ağ hatası: ${response.status} ${response.statusText}`);
+            }
+            const xmlText = await response.text();
+            
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
 
-        const tablo = document.querySelector("#kurTablosu tbody");
-        tablo.innerHTML = "";
+            // XML parse hatalarını kontrol et
+            if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+                throw new Error("XML dosyasında parse hatası.");
+            }
 
-        kurlar.forEach(({ kod, ad, birim }) => {
-          const kur = xmlDoc.querySelector(`Currency[CurrencyCode="${kod}"]`);
-          if (kur) {
-            const alis = kur.querySelector("ForexBuying").textContent;
-            const satis = kur.querySelector("ForexSelling").textContent;
-            tablo.innerHTML += `
-              <tr>
+            const currencies = xmlDoc.getElementsByTagName("Currency");
+            let foundCurrencies = 0;
+
+            // USD ve EUR kurlarını bul ve göster
+            for (let currency of currencies) {
+                const currencyCode = currency.getAttribute("CurrencyCode");
+
+                if (currencyCode === "USD" || currencyCode === "EUR") {
+                    const unit = currency.getElementsByTagName("Unit")[0].textContent;
+                    const name = currency.getElementsByTagName("Isim")[0].textContent;
+                    const buyingRate = currency.getElementsByTagName("ForexBuying")[0].textContent;
+                    const sellingRate = currency.getElementsByTagName("ForexSelling")[0].textContent;
+
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <span class="currency">${name} (${currencyCode})</span>
+                        <span class="rate">
+                            Alış: ${buyingRate} TL<br>
+                            Satış: ${sellingRate} TL
+                        </span>
+                    `;
+                    currencyListElement.appendChild(listItem);
+                    foundCurrencies++;
+                }
+            }
+
+            if (foundCurrencies === 0) {
+                 errorElement.textContent = "USD veya EUR döviz kuru bilgisi bulunamadı.";
+            }
+
+        } catch (error) {
+            console.error('Hata:', error);
+            errorElement.textContent = `Hata oluştu. Lütfen daha sonra tekrar deneyin. Detay: ${error.message}`;
+        } finally {
+            loadingElement.style.display = 'none';
+        }
+    }
+
+    getExchangeRates();
+</script>
+
+</body>
+</html>
