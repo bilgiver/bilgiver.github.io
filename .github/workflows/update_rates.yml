@@ -1,71 +1,75 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCMB Döviz Kurları</title>
-    <style>
-        /* CSS kodları aynı kalabilir */
-    </style>
-</head>
-<body>
+name: Update Exchange Rates
 
-<div class="container">
-    <h1>TCMB Güncel Döviz Kurları</h1>
-    <p>Veriler <a href="https://tcmb.org.tr/" target="_blank">Türkiye Cumhuriyet Merkez Bankası</a>'ndan alınmıştır.</p>
-    <div id="loading">Yükleniyor...</div>
-    <div id="error"></div>
-    <ul id="currency-list">
-        </ul>
-</div>
+on:
+  schedule:
+    # Her gün saat 15:45'te çalışır (UTC)
+    - cron: '45 15 * * *'
+  workflow_dispatch:
 
-<script>
-    // Vekil sunucu kullanmadan kendi deponuzdaki JSON dosyasını çekin
-    const dataUrl = './data/exchange_rates.json'; 
-    const currencyListElement = document.getElementById('currency-list');
-    const loadingElement = document.getElementById('loading');
-    const errorElement = document.getElementById('error');
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    async function getExchangeRates() {
-        loadingElement.style.display = 'block';
-        errorElement.textContent = '';
-        currencyListElement.innerHTML = '';
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies for XML parsing
+        run: npm install xml2js jsdom
 
-        try {
-            const response = await fetch(dataUrl);
-            if (!response.ok) {
-                throw new Error(`Veri dosyası bulunamadı: ${response.status}`);
-            }
+      - name: Fetch and parse XML to JSON
+        id: fetch_xml
+        run: |
+          node -e "
+            const xml2js = require('xml2js');
+            const fs = require('fs');
+            const { JSDOM } = require('jsdom');
             
-            const rates = await response.json();
-            
-            if (Object.keys(rates).length === 0) {
-                 throw new Error("Döviz kuru bilgisi bulunamadı.");
+            const xmlUrl = 'https://tcmb.org.tr/kurlar/today.xml';
+
+            async function fetchAndParse() {
+                try {
+                    const response = await fetch(xmlUrl);
+                    if (!response.ok) {
+                        throw new Error(\`Failed to fetch XML: \${response.status}\`);
+                    }
+                    const xmlData = await response.text();
+
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlData, 'text/xml');
+                    
+                    const currencies = xmlDoc.getElementsByTagName('Currency');
+                    const rates = {};
+                    
+                    for (const currency of currencies) {
+                        const code = currency.getAttribute('CurrencyCode');
+                        if (code === 'USD' || code === 'EUR' || code === 'GBP') {
+                            rates[code] = {
+                                name: currency.getElementsByTagName('Isim')[0].textContent,
+                                buying: currency.getElementsByTagName('ForexBuying')[0].textContent,
+                                selling: currency.getElementsByTagName('ForexSelling')[0].textContent
+                            };
+                        }
+                    }
+                    
+                    fs.writeFileSync('data/exchange_rates.json', JSON.stringify(rates, null, 2));
+                    console.log('Exchange rates updated successfully!');
+                } catch (error) {
+                    console.error('Error:', error);
+                    process.exit(1); // Exit with a non-zero code to indicate failure
+                }
             }
+            fetchAndParse();
+          "
 
-            for (const code in rates) {
-                const rate = rates[code];
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `
-                    <span class="currency">${rate.name} (${code})</span>
-                    <span class="rate">
-                        Alış: ${rate.buying} TL<br>
-                        Satış: ${rate.selling} TL
-                    </span>
-                `;
-                currencyListElement.appendChild(listItem);
-            }
-
-        } catch (error) {
-            console.error('Hata:', error);
-            errorElement.textContent = `Hata oluştu. Detay: ${error.message}`;
-        } finally {
-            loadingElement.style.display = 'none';
-        }
-    }
-
-    getExchangeRates();
-</script>
-
-</body>
-</html>
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add data/exchange_rates.json
+          git commit -m "Güncel döviz kurları eklendi." || echo "Değişiklik yok."
+          git push
