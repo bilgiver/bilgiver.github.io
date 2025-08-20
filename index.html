@@ -63,9 +63,8 @@
 </div>
 
 <script>
-
-<script>
-    const tcmbApiUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://tcmb.org.tr/kurlar/today.xml');
+    // cors-anywhere genellikle daha kararlıdır.
+    const tcmbApiUrl = 'https://cors-anywhere.herokuapp.com/https://tcmb.org.tr/kurlar/today.xml';
     const currencyListElement = document.getElementById('currency-list');
     const loadingElement = document.getElementById('loading');
     const errorElement = document.getElementById('error');
@@ -78,81 +77,18 @@
         try {
             const response = await fetch(tcmbApiUrl);
             if (!response.ok) {
+                // cors-anywhere ve Heroku'nun özel hata mesajlarını kontrol edin
                 throw new Error(`Ağ hatası: ${response.status} ${response.statusText}`);
             }
             
-            // allorigins.win yanıtı, orijinal veriyi "contents" anahtarında içerir.
-            const data = await response.json();
-            const xmlText = data.contents;
-            
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-
-            // XML parse hatalarını kontrol et
-            if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
-                throw new Error("XML dosyasında parse hatası.");
-            }
-
-            const currencies = xmlDoc.getElementsByTagName("Currency");
-            let foundCurrencies = 0;
-
-            // USD ve EUR kurlarını bul ve göster
-            for (let currency of currencies) {
-                const currencyCode = currency.getAttribute("CurrencyCode");
-
-                if (currencyCode === "USD" || currencyCode === "EUR") {
-                    const unit = currency.getElementsByTagName("Unit")[0].textContent;
-                    const name = currency.getElementsByTagName("Isim")[0].textContent;
-                    const buyingRate = currency.getElementsByTagName("ForexBuying")[0].textContent;
-                    const sellingRate = currency.getElementsByTagName("ForexSelling")[0].textContent;
-
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <span class="currency">${name} (${currencyCode})</span>
-                        <span class="rate">
-                            Alış: ${buyingRate} TL<br>
-                            Satış: ${sellingRate} TL
-                        </span>
-                    `;
-                    currencyListElement.appendChild(listItem);
-                    foundCurrencies++;
-                }
-            }
-
-            if (foundCurrencies === 0) {
-                 errorElement.textContent = "USD veya EUR döviz kuru bilgisi bulunamadı.";
-            }
-
-        } catch (error) {
-            console.error('Hata:', error);
-            errorElement.textContent = `Hata oluştu. Lütfen daha sonra tekrar deneyin. Detay: ${error.message}`;
-        } finally {
-            loadingElement.style.display = 'none';
-        }
-    }
-
-    getExchangeRates();
-</script>
-
-
-
-    const tcmbApiUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://tcmb.org.tr/kurlar/today.xml');
-    const currencyListElement = document.getElementById('currency-list');
-    const loadingElement = document.getElementById('loading');
-    const errorElement = document.getElementById('error');
-
-    async function getExchangeRates() {
-        loadingElement.style.display = 'block';
-        errorElement.textContent = '';
-        currencyListElement.innerHTML = '';
-
-        try {
-            const response = await fetch(tcmbApiUrl);
-            if (!response.ok) {
-                throw new Error(`Ağ hatası: ${response.status} ${response.statusText}`);
-            }
             const xmlText = await response.text();
             
+            // Eğer cors-anywhere ilk kez kullanılıyorsa, "Please press the button below" gibi bir mesaj dönebilir.
+            // Bu yüzden XML'in varlığını kontrol edelim.
+            if (!xmlText.startsWith('<?xml version')) {
+                throw new Error('Vekil sunucu ilk kullanım için yetkilendirme gerektiriyor veya yanıt düzgün değil.');
+            }
+
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(xmlText, "text/xml");
 
@@ -169,38 +105,8 @@
                 const currencyCode = currency.getAttribute("CurrencyCode");
 
                 if (currencyCode === "USD" || currencyCode === "EUR") {
-                    const unit = currency.getElementsByTagName("Unit")[0].textContent;
                     const name = currency.getElementsByTagName("Isim")[0].textContent;
                     const buyingRate = currency.getElementsByTagName("ForexBuying")[0].textContent;
                     const sellingRate = currency.getElementsByTagName("ForexSelling")[0].textContent;
 
                     const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <span class="currency">${name} (${currencyCode})</span>
-                        <span class="rate">
-                            Alış: ${buyingRate} TL<br>
-                            Satış: ${sellingRate} TL
-                        </span>
-                    `;
-                    currencyListElement.appendChild(listItem);
-                    foundCurrencies++;
-                }
-            }
-
-            if (foundCurrencies === 0) {
-                 errorElement.textContent = "USD veya EUR döviz kuru bilgisi bulunamadı.";
-            }
-
-        } catch (error) {
-            console.error('Hata:', error);
-            errorElement.textContent = `Hata oluştu. Lütfen daha sonra tekrar deneyin. Detay: ${error.message}`;
-        } finally {
-            loadingElement.style.display = 'none';
-        }
-    }
-
-    getExchangeRates();
-</script>
-
-</body>
-</html>
