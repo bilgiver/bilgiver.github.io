@@ -1,0 +1,31 @@
+name: Güncel Döviz Kurlarını Çek
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Her saat başında çalışır
+
+jobs:
+  update-currency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Python'u Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Bağımlılıkları Kur
+        run: pip install requests
+
+      - name: Döviz Kurlarını Çek ve Dosyaya Kaydet
+        run: |
+          python -c "import requests, json; r = requests.get('https://api.exchangerate-api.com/v4/latest/USD'); data = r.json(); with open('rates.json', 'w') as f: json.dump(data, f)"
+
+      - name: Değişiklikleri Kaydet
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add rates.json
+          git commit -m "API verilerini güncelledi" || echo "Değişiklik yok"
+          git push
