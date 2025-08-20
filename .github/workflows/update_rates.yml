@@ -3,6 +3,7 @@ name: Update Exchange Rates
 on:
   schedule:
     # Her gün saat 15:45'te çalışır (UTC)
+    # Türkiye saatiyle 18:45'e denk gelir.
     - cron: '45 15 * * *'
   workflow_dispatch:
 
@@ -19,15 +20,14 @@ jobs:
           node-version: '18'
           
       - name: Install dependencies for XML parsing
-        run: npm install xml2js jsdom
+        run: npm install jsdom
 
       - name: Fetch and parse XML to JSON
         id: fetch_xml
         run: |
           node -e "
-            const xml2js = require('xml2js');
-            const fs = require('fs');
             const { JSDOM } = require('jsdom');
+            const fs = require('fs');
             
             const xmlUrl = 'https://tcmb.org.tr/kurlar/today.xml';
 
@@ -35,19 +35,23 @@ jobs:
                 try {
                     const response = await fetch(xmlUrl);
                     if (!response.ok) {
-                        throw new Error(\`Failed to fetch XML: \${response.status}\`);
+                        throw new Error(\`Ağ hatası: \${response.status} \${response.statusText}\`);
                     }
                     const xmlData = await response.text();
 
-                    const parser = new DOMParser();
+                    const parser = new JSDOM().window.DOMParser;
                     const xmlDoc = parser.parseFromString(xmlData, 'text/xml');
                     
+                    if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+                      throw new Error('XML dosyasında parse hatası.');
+                    }
+
                     const currencies = xmlDoc.getElementsByTagName('Currency');
                     const rates = {};
                     
                     for (const currency of currencies) {
                         const code = currency.getAttribute('CurrencyCode');
-                        if (code === 'USD' || code === 'EUR' || code === 'GBP') {
+                        if (code === 'USD' || code === 'EUR') {
                             rates[code] = {
                                 name: currency.getElementsByTagName('Isim')[0].textContent,
                                 buying: currency.getElementsByTagName('ForexBuying')[0].textContent,
@@ -57,10 +61,10 @@ jobs:
                     }
                     
                     fs.writeFileSync('data/exchange_rates.json', JSON.stringify(rates, null, 2));
-                    console.log('Exchange rates updated successfully!');
+                    console.log('Döviz kurları başarıyla güncellendi!');
                 } catch (error) {
-                    console.error('Error:', error);
-                    process.exit(1); // Exit with a non-zero code to indicate failure
+                    console.error('Hata:', error);
+                    process.exit(1);
                 }
             }
             fetchAndParse();
