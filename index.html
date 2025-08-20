@@ -5,50 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TCMB Döviz Kurları</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-        }
-        li:last-child {
-            border-bottom: none;
-        }
-        .currency {
-            font-weight: bold;
-        }
-        .rate {
-            color: #555;
-        }
-        #loading {
-            text-align: center;
-            color: #888;
-        }
-        #error {
-            text-align: center;
-            color: #d9534f;
-        }
+        /* CSS kodları aynı kalabilir */
     </style>
 </head>
 <body>
@@ -63,8 +20,8 @@
 </div>
 
 <script>
-    // cors-anywhere genellikle daha kararlıdır.
-    const tcmbApiUrl = 'https://cors-anywhere.herokuapp.com/https://tcmb.org.tr/kurlar/today.xml';
+    // Vekil sunucu kullanmadan kendi deponuzdaki JSON dosyasını çekin
+    const dataUrl = './data/exchange_rates.json'; 
     const currencyListElement = document.getElementById('currency-list');
     const loadingElement = document.getElementById('loading');
     const errorElement = document.getElementById('error');
@@ -75,38 +32,40 @@
         currencyListElement.innerHTML = '';
 
         try {
-            const response = await fetch(tcmbApiUrl);
+            const response = await fetch(dataUrl);
             if (!response.ok) {
-                // cors-anywhere ve Heroku'nun özel hata mesajlarını kontrol edin
-                throw new Error(`Ağ hatası: ${response.status} ${response.statusText}`);
+                throw new Error(`Veri dosyası bulunamadı: ${response.status}`);
             }
             
-            const xmlText = await response.text();
+            const rates = await response.json();
             
-            // Eğer cors-anywhere ilk kez kullanılıyorsa, "Please press the button below" gibi bir mesaj dönebilir.
-            // Bu yüzden XML'in varlığını kontrol edelim.
-            if (!xmlText.startsWith('<?xml version')) {
-                throw new Error('Vekil sunucu ilk kullanım için yetkilendirme gerektiriyor veya yanıt düzgün değil.');
+            if (Object.keys(rates).length === 0) {
+                 throw new Error("Döviz kuru bilgisi bulunamadı.");
             }
 
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-
-            // XML parse hatalarını kontrol et
-            if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
-                throw new Error("XML dosyasında parse hatası.");
+            for (const code in rates) {
+                const rate = rates[code];
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span class="currency">${rate.name} (${code})</span>
+                    <span class="rate">
+                        Alış: ${rate.buying} TL<br>
+                        Satış: ${rate.selling} TL
+                    </span>
+                `;
+                currencyListElement.appendChild(listItem);
             }
 
-            const currencies = xmlDoc.getElementsByTagName("Currency");
-            let foundCurrencies = 0;
+        } catch (error) {
+            console.error('Hata:', error);
+            errorElement.textContent = `Hata oluştu. Detay: ${error.message}`;
+        } finally {
+            loadingElement.style.display = 'none';
+        }
+    }
 
-            // USD ve EUR kurlarını bul ve göster
-            for (let currency of currencies) {
-                const currencyCode = currency.getAttribute("CurrencyCode");
+    getExchangeRates();
+</script>
 
-                if (currencyCode === "USD" || currencyCode === "EUR") {
-                    const name = currency.getElementsByTagName("Isim")[0].textContent;
-                    const buyingRate = currency.getElementsByTagName("ForexBuying")[0].textContent;
-                    const sellingRate = currency.getElementsByTagName("ForexSelling")[0].textContent;
-
-                    const listItem = document.createElement('li');
+</body>
+</html>
