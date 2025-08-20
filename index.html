@@ -5,7 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TCMB Döviz Kurları</title>
     <style>
-        /* CSS kodları aynı kalabilir */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        .currency {
+            font-weight: bold;
+        }
+        .rate {
+            color: #555;
+        }
+        #loading {
+            text-align: center;
+            color: #888;
+        }
+        #error {
+            text-align: center;
+            color: #d9534f;
+        }
     </style>
 </head>
 <body>
@@ -20,7 +63,6 @@
 </div>
 
 <script>
-    // Vekil sunucu kullanmadan kendi deponuzdaki JSON dosyasını çekin
     const dataUrl = './data/exchange_rates.json'; 
     const currencyListElement = document.getElementById('currency-list');
     const loadingElement = document.getElementById('loading');
@@ -34,13 +76,13 @@
         try {
             const response = await fetch(dataUrl);
             if (!response.ok) {
-                throw new Error(`Veri dosyası bulunamadı: ${response.status}`);
+                throw new Error(`Veri dosyası bulunamadı. Lütfen GitHub Actions'ın çalışmasını bekleyin.`);
             }
             
             const rates = await response.json();
             
             if (Object.keys(rates).length === 0) {
-                 throw new Error("Döviz kuru bilgisi bulunamadı.");
+                 throw new Error("Döviz kuru bilgisi bulunamadı. Lütfen daha sonra tekrar deneyin.");
             }
 
             for (const code in rates) {

@@ -2,8 +2,6 @@ name: Update Exchange Rates
 
 on:
   schedule:
-    # Her gün saat 15:45'te çalışır (UTC)
-    # Türkiye saatiyle 18:45'e denk gelir.
     - cron: '45 15 * * *'
   workflow_dispatch:
 
@@ -19,7 +17,7 @@ jobs:
         with:
           node-version: '18'
           
-      - name: Install dependencies for XML parsing
+      - name: Install dependencies
         run: npm install jsdom
 
       - name: Fetch and parse XML to JSON
