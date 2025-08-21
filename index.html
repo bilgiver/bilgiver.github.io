@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lang="tr" style="scroll-behavior: smooth;">
 <head>
-    <meta charset="UTF-8">
+
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Lider Club bünyesindeki Magical House, lüks konaklama, binicilik, restoran ve etkinlik hizmetleri sunar. Eşsiz deneyimler için hemen keşfedin!">
-    <meta name="keywords" content="Magical House, Lider Club, lüks konaklama, binicilik, restoran, etkinlik, Saklı Sofra, Magical Events">
-    <meta name="author" content="Lider Club">
     <title>Magical House - Lider Club | Lüks Konaklama ve Etkinlikler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f2f5;
+            background-color: #f0f2f5; /* Daha açık, zarif bir arka plan */
             color: #333;
         }
         h1, h2, h3 {
-            font-family: 'Times New Roman', serif;
+            font-family: 'Lora', serif; /* Başlıklar için serif font */
         }
+        /* Başlık görsellerinin genel stilini kaldırıp dinamik galeriye uyum sağlıyoruz */
         .header-bg, .binicilik-header-bg, .restoran-header-bg, .events-header-bg {
             background-size: cover;
             background-position: center;
-            height: 70vh;
+            height: 70vh; /* Daha etkileyici bir yükseklik */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -29,6 +31,20 @@
             color: white;
             position: relative;
         }
+        /* Dinamik galeriyi ana başlık bölümünün içine yerleştirmek için */
+        #main-header-gallery {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 0; /* İçerik önde olsun diye */
+        }
+
         .header-bg::before, .binicilik-header-bg::before, .restoran-header-bg::before, .events-header-bg::before {
             content: '';
             position: absolute;
@@ -36,7 +52,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.4); /* Opaklık azaltıldı */
             z-index: 1;
         }
         .header-content {
@@ -46,53 +62,15 @@
         }
         .dropdown-menu {
             display: none;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.375rem;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-            min-width: 200px;
-            z-index: 50;
         }
         .dropdown.active .dropdown-menu {
             display: block;
         }
-        .dropdown-menu a {
-            display: block;
-            padding: 0.5rem 1rem;
-            color: #374151;
-            text-decoration: none;
-        }
-        .dropdown-menu a:hover {
-            background-color: #f3f4f6;
-        }
         .card-button {
-            background-color: #1d4ed8;
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 9999px;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease;
-        }
-        .card-button:hover {
-            background-color: #1e40af;
+            @apply bg-blue-700 text-white px-6 py-2 rounded-full hover:bg-blue-800 transition duration-300 shadow-lg text-base font-medium;
         }
         .contact-button {
-            background-color: #15803d;
-            color: white;
-            padding: 0.75rem 2rem;
-            border-radius: 9999px;
-            text-decoration: none;
-            font-size: 1.25rem;
-            font-weight: 600;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease;
-        }
-        .contact-button:hover {
-            background-color: #166534;
+            @apply bg-green-700 text-white px-8 py-3 rounded-full hover:bg-green-800 transition duration-300 text-xl font-semibold shadow-lg;
         }
         .room-modal-overlay {
             position: fixed;
@@ -117,7 +95,7 @@
             background-color: white;
             padding: 2.5rem;
             border-radius: 0.75rem;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             width: 90%;
             max-width: 600px;
             transform: translateY(-20px);
@@ -139,76 +117,47 @@
         .room-modal-content li {
             margin-bottom: 0.5rem;
         }
+        /* Yeni marka kartları stilleri */
         .brand-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease;
-        }
-        .brand-card:hover {
-            transform: scale(1.05);
+            @apply bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transform hover:scale-105 transition duration-300 ease-in-out;
         }
         .brand-card img {
-            width: 100%;
-            height: 12rem;
-            object-fit: cover;
+            @apply w-full h-48 object-cover;
         }
         .brand-card-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            @apply p-6 flex-grow flex flex-col justify-between;
         }
         .brand-card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 0.5rem;
+            @apply text-2xl font-semibold text-gray-900 mb-2;
         }
         .brand-card p {
-            color: #4b5563;
-            font-size: 1rem;
-            margin-bottom: 1rem;
+            @apply text-gray-700 text-base leading-relaxed mb-4;
         }
         .brand-card-link {
-            display: inline-block;
-            background-color: #1f2937;
-            color: white;
-            font-size: 0.875rem;
-            font-weight: 500;
-            padding: 0.5rem 1.25rem;
-            border-radius: 9999px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
+            @apply inline-block bg-gray-800 text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-gray-700 transition duration-300;
         }
-        .brand-card-link:hover {
-            background-color: #374151;
-        }
-        .news-gallery-container {
-            position: absolute;
+        /* Haber sitesi benzeri galeri stilleri */
+        .news-gallery-container { /* Yeni eklendi, galeriyi sarmalar */
+            position: absolute; /* Ana başlık içine tam yerleşim */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
             border-radius: 0.75rem;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-            z-index: 0;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            z-index: 0; /* Başlık içeriğinin altında kalacak */
         }
         .news-gallery-image {
-            position: absolute;
+            position: absolute; /* Üst üste binmeleri için */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: none;
+            display: none; /* Varsayılan olarak gizli */
             opacity: 0;
-            transition: opacity 0.8s ease-in-out;
+            transition: opacity 0.8s ease-in-out; /* Daha yumuşak geçiş */
         }
         .news-gallery-image.active {
             display: block;
@@ -225,176 +174,130 @@
             font-size: 1.5rem;
             font-weight: 600;
             text-align: center;
-            z-index: 2;
+            z-index: 2; /* Resimlerin üzerinde kalsın */
         }
         .gallery-nav-buttons {
-            position: absolute;
-            bottom: 6rem;
+            position: absolute; /* Galerinin altına konumlandırma */
+            bottom: 6rem; /* Altyazının üstünde boşluk bırak */
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             justify-content: center;
             gap: 0.75rem;
             flex-wrap: wrap;
-            z-index: 2;
+            z-index: 2; /* Resimlerin üzerinde kalsın */
         }
         .gallery-nav-buttons button {
-            background-color: #4b5563;
-            color: white;
-            font-size: 0.875rem;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            @apply bg-gray-700 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-gray-600 transition duration-300;
         }
-        .gallery-nav-buttons button:hover {
-            background-color: #6b7280;
-        }
-        .gallery-nav-buttons button.active {
-            background-color: #1d4ed8;
-        }
+		
+		
+.gallery-nav-buttons button.active {
+  background: #2563eb;  /* mavi arka plan */
+  color: white;
+  font-weight: bold;
+  border-color: #1e40af;
+}
+		
+        /* Modal içeriği için yeni görsel stili */
         .modal-image-display {
             max-width: 100%;
-            max-height: 70vh;
+            max-height: 70vh; /* Ekran yüksekliğine göre ayarlandı */
             object-fit: contain;
             border-radius: 0.5rem;
             margin-bottom: 1.5rem;
         }
-        nav {
-            background-color: white;
-            padding: 1rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        .flex {
-            display: flex;
-        }
-        .justify-between {
-            justify-content: space-between;
-        }
-        .items-center {
-            align-items: center;
-        }
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
-        .hidden {
-            display: none;
-        }
-        @media (min-width: 1024px) {
-            .lg\:flex {
-                display: flex;
-            }
-            .lg\:hidden {
-                display: none;
-            }
-            .lg\:inline-block {
-                display: inline-block;
-            }
-            .lg\:flex-grow {
-                flex-grow: 1;
-            }
-            .lg\:justify-end {
-                justify-content: flex-end;
-            }
-        }
-        @media (max-width: 1023px) {
-            .gallery-nav-buttons button {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.75rem;
-            }
-        }
     </style>
+
+<style>
+#gallery-controls button {
+  padding: 6px 10px;
+  margin: 0 3px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid #ccc;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#gallery-controls button:hover {
+  background: #f0f0f0;
+}
+#gallery-controls button.active {
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+  border-color: #1e40af;
+}
+</style>
+
 </head>
 <body>
-    <!-- Üst Menü / Navbar -->
-    <nav>
-        <div class="container flex justify-between items-center flex-wrap">
-            <!-- Logo -->
-            <div class="flex items-center flex-shrink-0 mr-6">
-                <img src="https://placehold.co/60x60/f0f2f5/2c3e50?text=LC" alt="Lider Club Logo" style="height: 4rem; width: 4rem; border-radius: 50%; margin-right: 1rem;">
-                <span style="font-size: 1.875rem; font-weight: 600; color: #111827;">Lider Club</span>
+
+    <nav class="bg-white p-4 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center flex-wrap">
+            <div class="flex items-center flex-shrink-0 text-gray-800 mr-6">
+                <img src="https://placehold.co/60x60/f0f2f5/2c3e50?text=LC" alt="Lider Club Logo" class="h-16 w-16 rounded-full mr-4 shadow-sm">
+                <span class="font-semibold text-3xl tracking-tight text-gray-900">Lider Club</span>
             </div>
-            <!-- Mobil Menü Düğmesi -->
-            <div class="lg:hidden">
-                <button id="nav-toggle" style="padding: 0.5rem 0.75rem; border: 1px solid #4b5563; border-radius: 0.25rem; color: #4b5563;" aria-label="Menüyü Aç/Kapat">
-                    [☰]
+
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-gray-800 hover:border-gray-800">
+                    <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
-            <!-- Menü Öğeleri -->
+
             <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden" id="nav-content">
-                <ul class="lg:flex-grow lg:flex lg:justify-end" style="list-style: none; margin: 0; padding: 0;">
-                    <li><a href="#" style="display: block; margin: 1rem 0; color: #4b5563; font-weight: 500; text-decoration: none;" class="lg:inline-block lg:mt-0 mr-6">Anasayfa</a></li>
-                    <li><a href="#" style="display: block; margin: 1rem 0; color: #4b5563; font-weight: 500; text-decoration: none;" class="lg:inline-block lg:mt-0 mr-6">Hakkımızda</a></li>
+                <ul class="text-base lg:flex-grow lg:flex lg:justify-end">
+                    <li><a href="#" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-gray-900 font-medium mr-6">Anasayfa</a></li>
+                    <li><a href="#" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-gray-900 font-medium mr-6">Hakkımızda</a></li>
                     <li class="relative dropdown">
-                        <a href="#" id="markalarimiz-toggle" style="display: block; margin: 1rem 0; color: #4b5563; font-weight: 500; text-decoration: none;" class="lg:inline-block lg:mt-0 mr-6">
-                            Markalarımız [▼]
+                        <a href="#" id="markalarimiz-toggle" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-gray-900 font-medium mr-6">
+                            Markalarımız <i class="fas fa-caret-down ml-1 text-sm"></i>
                         </a>
-                        <div class="dropdown-menu">
-                            <a href="#binicilik" style="color: #374151;">Binicilik - Magical Club</a>
-                            <a href="#sakli-sofra" style="color: #374151;">Restoran - Saklı Sofra</a>
-                            <a href="#accommodation" style="color: #374151;">Konaklama - Magical House</a>
-                            <a href="#magical-events" style="color: #374151;">Etkinlik - Magical Event's</a>
+                        <div class="dropdown-menu absolute hidden text-gray-700 pt-2 shadow-lg rounded-md bg-white border border-gray-200 z-50 min-w-[200px]">
+                            <a href="#binicilik" class="block px-4 py-2 hover:bg-gray-100 whitespace-no-wrap text-gray-800">Binicilik - Magical Club</a>
+                            <a href="#sakli-sofra" class="block px-4 py-2 hover:bg-gray-100 whitespace-no-wrap text-gray-800">Restoran - Saklı Sofra</a>
+                            <a href="#accommodation" class="block px-4 py-2 hover:bg-gray-100 whitespace-no-wrap text-gray-800">Konaklama - Magical House</a>
+                            <a href="#magical-events" class="block px-4 py-2 hover:bg-gray-100 whitespace-no-wrap text-gray-800">Etkinlik - Magical Event's</a>
                         </div>
                     </li>
-                    <li><a href="#" style="display: block; margin: 1rem 0; color: #4b5563; font-weight: 500; text-decoration: none;" class="lg:inline-block lg:mt-0">İletişim</a></li>
+                    <li><a href="#" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-gray-900 font-medium">İletişim</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Ana Başlık ve Görsel Bölümü -->
     <header class="header-bg">
         <div class="news-gallery-container" id="main-header-gallery-container">
-            <img src="BINICILIK.jpg" alt="Binicilik Kulübü Atlar" class="news-gallery-image active" data-title="Binicilik Kulübü: Eğlenceli Anlar">
-            <img src="BINICILIK2.jpg" alt="Binicilik Kulübü Eğitmen ve Öğrenci" class="news-gallery-image" data-title="Binicilik Dersleri">
-            <img src="EVENT.jpg" alt="Magical Events Konser Sahnesi" class="news-gallery-image" data-title="Büyüleyici Etkinlikler">
-            <img src="EVENTS.jpg" alt="Magical Events Toplantı Odası" class="news-gallery-image" data-title="Profesyonel Etkinlik Alanları">
-            <img src="events-1-880x600.jpg" alt="Magical Events Dış Alan" class="news-gallery-image" data-title="Açık Hava Etkinlikleri">
-            <img src="HOTEL-scaled-880x600.jpg" alt="Magical House Hotel Odası" class="news-gallery-image" data-title="Konforlu Otel Odaları">
-            <img src="MAGICALHOTEL.jpg" alt="Magical House Hotel Dış Görünüş" class="news-gallery-image" data-title="Magical House Genel Bakış">
-            <img src="MG-HOTEL.jpg" alt="MG Hotel Lobisi" class="news-gallery-image" data-title="Otel Lobisi">
-            <img src="SAKLISOFRA.jpg" alt="Saklı Sofra Restoran Ortamı" class="news-gallery-image" data-title="Saklı Sofra: Lezzet Durağı">
-            <img src="skl-09381-scaled.jpg" alt="Saklı Sofra Mutfak Detayı" class="news-gallery-image" data-title="Şefin Lezzetleri">
-            <img src="skl-09381-scaled-880x600.jpg" alt="Restoran Genel Görünüm" class="news-gallery-image" data-title="Restoran Genel Görünüm">
-            <img src="TESIS-GENEL.jpg" alt="Tesis Genel Görünüm 1" class="news-gallery-image" data-title="Geniş Tesis Alanları">
-            <img src="TESIS-GENEL-2048x1152.jpg" alt="Tesis Genel Görünüm 2" class="news-gallery-image" data-title="Lider Club Panoraması">
             <div class="news-gallery-caption" id="gallery-caption"></div>
-            <div class="gallery-nav-buttons" id="gallery-buttons-container"></div>
+            <div class="gallery-nav-buttons" id="gallery-buttons-container">
+                </div>
         </div>
+
         <div class="header-content">
-            <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Magical House</h1>
-            <p style="font-size: 1.75rem; font-weight: 300; color: #e5e7eb; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">Lider Club'ın eşsiz konaklama deneyimiyle tanışın.</p>
-            <a href="#accommodation" style="margin-top: 2.5rem; display: inline-block; background-color: #2563eb; color: white; font-size: 1.25rem; font-weight: 600; padding: 1rem 2.5rem; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" class="hover:bg-blue-700">Hemen Keşfedin</a>
+            <h1 class="text-7xl md:text-8xl font-bold mb-6 leading-tight text-white drop-shadow-lg">Magical House</h1>
+            <p class="text-3xl md:text-4xl font-light text-gray-200 leading-relaxed text-white drop-shadow-md">Lider Club'ın eşsiz konaklama deneyimiyle tanışın.</p>
+            <a href="#accommodation" class="mt-10 inline-block bg-blue-600 hover:bg-blue-700 text-white text-xl font-semibold px-10 py-4 rounded-full transition duration-300 shadow-xl">Hemen Keşfedin</a>
         </div>
     </header>
 
-    <main class="container" style="padding: 4rem 1.5rem;">
-        <section id="welcome" style="margin-bottom: 5rem; text-align: center;">
-            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Magical House'a Hoş Geldiniz</h2>
-            <div style="max-width: 64rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 1.5rem;">
+    <main class="container mx-auto py-16 px-6 lg:px-8">
+        <section id="welcome" class="mb-20 text-center">
+            <h2 class="text-5xl font-bold text-gray-900 mb-8">Magical House'a Hoş Geldiniz</h2>
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 lg:p-12">
+                <p class="text-gray-700 leading-relaxed text-xl mb-6">
                     Lider Club bünyesindeki Magical House, doğanın huzurunu modern lüksle birleştiren özel bir konaklama destinasyonudur. Şehrin karmaşasından uzaklaşarak kendinizi yenileyeceğiniz, ayrıcalıklı bir kaçış noktası sunuyoruz. Her bir detay, misafirlerimizin beklentilerinin ötesinde bir konfor ve estetik sunmak üzere özenle düşünülmüştür.
                 </p>
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75;">
+                <p class="text-gray-700 leading-relaxed text-xl">
                     Unutulmaz anılar biriktirmek, eşsiz bir dinlenme deneyimi yaşamak veya özel etkinliklerinizi düzenlemek için Magical House, kalite ve huzurun buluştuğu adresinizdir.
                 </p>
             </div>
         </section>
 
-        <!-- Markalarımızı Keşfedin -->
-        <section id="our-brands-section" style="margin-bottom: 5rem; text-align: center; padding: 4rem 0;">
-            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 3rem;">Markalarımızı Keşfedin</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+        <section id="our-brands-section" class="mb-20 text-center py-16">
+            <h2 class="text-5xl font-bold text-gray-900 mb-12">Markalarımızı Keşfedin</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <a href="#accommodation" class="brand-card">
                     <img src="MAGICALHOTEL.jpg" alt="Magical House Konaklama" onerror="this.src='https://placehold.co/700x480/dbeafe/1e3a8a?text=Magical+House';">
                     <div class="brand-card-content">
@@ -403,6 +306,7 @@
                         <span class="brand-card-link">Keşfet</span>
                     </div>
                 </a>
+
                 <a href="#binicilik" class="brand-card">
                     <img src="BINICILIK.jpg" alt="Binicilik Magical Club" onerror="this.src='https://placehold.co/700x480/a7d9b9/3c7b5b?text=Magical+Club+Binicilik';">
                     <div class="brand-card-content">
@@ -411,6 +315,7 @@
                         <span class="brand-card-link">Keşfet</span>
                     </div>
                 </a>
+
                 <a href="#sakli-sofra" class="brand-card">
                     <img src="SAKLISOFRA.jpg" alt="Saklı Sofra Restoran" onerror="this.src='https://placehold.co/700x480/f7d794/a36e00?text=Sakl%C4%B1+Sofra+Restoran';">
                     <div class="brand-card-content">
@@ -419,6 +324,7 @@
                         <span class="brand-card-link">Keşfet</span>
                     </div>
                 </a>
+
                 <a href="#magical-events" class="brand-card">
                     <img src="EVENT.jpg" alt="Magical Events" onerror="this.src='https://placehold.co/700x480/c8bbf7/5a3d90?text=Magical+Events';">
                     <div class="brand-card-content">
@@ -430,16 +336,15 @@
             </div>
         </section>
 
-        <!-- Konaklama Seçenekleri / Odalar -->
-        <section id="accommodation" style="margin-bottom: 5rem;">
-            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 3rem; text-align: center;">Ayrıcalıklı Konaklama Seçeneklerimiz</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem;">
-                <div style="background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s ease;">
-                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=L%C3%BCks+Deluxe+Oda" alt="Deluxe Oda" style="width: 100%; height: 16rem; object-fit: cover;">
-                    <div style="padding: 2rem;">
-                        <h3 style="font-size: 1.875rem; font-weight: 600; color: #111827; margin-bottom: 0.75rem;">Deluxe Oda</h3>
-                        <p style="color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">Zarafetle tasarlanmış, geniş ve ferah Deluxe Odalarımızda lüksün ve konforun tadını çıkarın. Şehir veya doğa manzarası seçenekleriyle.</p>
-                        <ul style="color: #1f2937; list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5rem;">
+        <section id="accommodation" class="mb-20">
+            <h2 class="text-5xl font-bold text-gray-900 mb-12 text-center">Ayrıcalıklı Konaklama Seçeneklerimiz</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out">
+                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=L%C3%BCks+Deluxe+Oda" alt="Deluxe Oda" class="w-full h-64 object-cover">
+                    <div class="p-8">
+                        <h3 class="text-3xl font-semibold text-gray-900 mb-3">Deluxe Oda</h3>
+                        <p class="text-gray-700 mb-6 leading-relaxed">Zarafetle tasarlanmış, geniş ve ferah Deluxe Odalarımızda lüksün ve konforun tadını çıkarın. Şehir veya doğa manzarası seçenekleriyle.</p>
+                        <ul class="text-gray-800 list-disc list-inside mb-6 space-y-1">
                             <li>King-size Yatak Seçeneği</li>
                             <li>Geniş Çalışma Alanı</li>
                             <li>Ücretsiz Yüksek Hızlı Wi-Fi</li>
@@ -450,15 +355,18 @@
                                 data-room-id="deluxe"
                                 data-room-title="Deluxe Oda"
                                 data-room-description="Zarafetle tasarlanmış, geniş ve ferah Deluxe Odalarımızda lüksün ve konforun tadını çıkarın. Şehir veya doğa manzarası seçenekleriyle."
-                                data-room-features="King-size Yatak Seçeneği,Geniş Çalışma Alanı,Ücretsiz Yüksek Hızlı Wi-Fi,Akıllı TV ve Minibar,Doğa Manzarası (Seçenekli)">Detayları İncele</button>
+                                data-room-features="King-size Yatak Seçeneği,Geniş Çalışma Alanı,Ücretsiz Yüksek Hızlı Wi-Fi,Akıllı TV ve Minibar,Doğa Manzarası (Seçenekli)">
+                            Detayları İncele
+                        </button>
                     </div>
                 </div>
-                <div style="background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s ease;">
-                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=Konforlu+Suit" alt="Suit Oda" style="width: 100%; height: 16rem; object-fit: cover;">
-                    <div style="padding: 2rem;">
-                        <h3 style="font-size: 1.875rem; font-weight: 600; color: #111827; margin-bottom: 0.75rem;">Suit Oda</h3>
-                        <p style="color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">Misafirlerimize özel olarak hazırlanan suitlerimiz, benzersiz bir konaklama deneyimi için geniş alan ve ayrıcalıklı olanaklar sunar.</p>
-                        <ul style="color: #1f2937; list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5rem;">
+
+                <div class="bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out">
+                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=Konforlu+Suit" alt="Suit Oda" class="w-full h-64 object-cover">
+                    <div class="p-8">
+                        <h3 class="text-3xl font-semibold text-gray-900 mb-3">Suit Oda</h3>
+                        <p class="text-gray-700 mb-6 leading-relaxed">Misafirlerimize özel olarak hazırlanan suitlerimiz, benzersiz bir konaklama deneyimi için geniş alan ve ayrıcalıklı olanaklar sunar.</p>
+                        <ul class="text-gray-800 list-disc list-inside mb-6 space-y-1">
                             <li>Ayrı Oturma Odası</li>
                             <li>Özel Tasarım Banyo</li>
                             <li>Kahve Makinesi</li>
@@ -469,15 +377,18 @@
                                 data-room-id="suit"
                                 data-room-title="Suit Oda"
                                 data-room-description="Misafirlerimize özel olarak hazırlanan suitlerimiz, benzersiz bir konaklama deneyimi için geniş alan ve ayrıcalıklı olanaklar sunar."
-                                data-room-features="Ayrı Oturma Odası,Özel Tasarım Banyo,Kahve Makinesi,Panoramik Manzara,Özel Balkon veya Teras">Detayları İncele</button>
+                                data-room-features="Ayrı Oturma Odası,Özel Tasarım Banyo,Kahve Makinesi,Panoramik Manzara,Özel Balkon veya Teras">
+                            Detayları İncele
+                        </button>
                     </div>
                 </div>
-                <div style="background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s ease;">
-                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=Geni%C5%9F+Aile+Odalar%C4%B1" alt="Aile Odaları" style="width: 100%; height: 16rem; object-fit: cover;">
-                    <div style="padding: 2rem;">
-                        <h3 style="font-size: 1.875rem; font-weight: 600; color: #111827; margin-bottom: 0.75rem;">Aile Odaları</h3>
-                        <p style="color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">Tüm ailenizin konforu düşünülerek tasarlanmış geniş odalarımızda keyifli ve unutulmaz anlar yaşayın.</p>
-                        <ul style="color: #1f2937; list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5rem;">
+
+                <div class="bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out">
+                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=Geni%C5%9F+Aile+Odalar%C4%B1" alt="Aile Odaları" class="w-full h-64 object-cover">
+                    <div class="p-8">
+                        <h3 class="text-3xl font-semibold text-gray-900 mb-3">Aile Odaları</h3>
+                        <p class="text-gray-700 mb-6 leading-relaxed">Tüm ailenizin konforu düşünülerek tasarlanmış geniş odalarımızda keyifli ve unutulmaz anlar yaşayın.</p>
+                        <ul class="text-gray-800 list-disc list-inside mb-6 space-y-1">
                             <li>Bağlantılı Oda Seçeneği</li>
                             <li>Çocuklar İçin Özel Alanlar</li>
                             <li>Ekstra Yatak İmkanı</li>
@@ -488,149 +399,149 @@
                                 data-room-id="family"
                                 data-room-title="Aile Odaları"
                                 data-room-description="Tüm ailenizin konforu düşünülerek tasarlanmış geniş odalarımızda keyifli ve unutulmaz anlar yaşayın."
-                                data-room-features="Bağlantılı Oda Seçeneği,Çocuklar İçin Özel Alanlar,Ekstra Yatak İmkanı,Oyun Konsolu (Talep Üzerine),Açık Hava Alanı Erişimi">Detayları İncele</button>
+                                data-room-features="Bağlantılı Oda Seçeneği,Çocuklar İçin Özel Alanlar,Ekstra Yatak İmkanı,Oyun Konsolu (Talep Üzerine),Açık Hava Alanı Erişimi">
+                            Detayları İncele
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Binicilik - Magical Club -->
         <header id="binicilik" class="binicilik-header-bg">
             <div class="header-content">
-                <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Binicilik – Magical Club</h1>
-                <p style="font-size: 1.75rem; font-weight: 300; color: #e5e7eb; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">Atların asil dünyasıyla buluşun.</p>
-                <a href="#magical-club-content" style="margin-top: 2.5rem; display: inline-block; background-color: #ca8a04; color: white; font-size: 1.25rem; font-weight: 600; padding: 1rem 2.5rem; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" class="hover:bg-yellow-700">Daha Fazlasını Keşfet</a>
+                <h1 class="text-7xl md:text-8xl font-bold mb-6 leading-tight text-white drop-shadow-lg">Binicilik – Magical Club</h1>
+                <p class="text-3xl md:text-4xl font-light text-gray-200 leading-relaxed text-white drop-shadow-md">Atların asil dünyasıyla buluşun.</p>
+                <a href="#magical-club-content" class="mt-10 inline-block bg-yellow-600 hover:bg-yellow-700 text-white text-xl font-semibold px-10 py-4 rounded-full transition duration-300 shadow-xl">Daha Fazlasını Keşfet</a>
             </div>
         </header>
-        <section id="magical-club-content" style="margin-bottom: 5rem; text-align: center; padding: 4rem 0;">
-            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Magical Club Binicilik Deneyimi</h2>
-            <div style="max-width: 64rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 1.5rem;">
+
+        <section id="magical-club-content" class="mb-20 text-center py-16">
+            <h2 class="text-5xl font-bold text-gray-900 mb-8">Magical Club Binicilik Deneyimi</h2>
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 lg:p-12">
+                <p class="text-gray-700 leading-relaxed text-xl mb-6">
                     Lider Club'ın bir parçası olan Magical Club Binicilik, her seviyeden biniciye hitap eden profesyonel binicilik dersleri ve eşsiz at deneyimleri sunar. Deneyimli eğitmenlerimiz eşliğinde, atlarla güvenli ve keyifli bir bağ kurabilir, doğanın içinde özgürce dört nala koşmanın tadını çıkarabilirsiniz.
                 </p>
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75;">
+                <p class="text-gray-700 leading-relaxed text-xl">
                     Modern tesislerimiz ve iyi eğitimli atlarımızla, binicilik tutkunuzu keşfetmeniz veya mevcut becerilerinizi geliştirmeniz için ideal bir ortam sağlıyoruz.
                 </p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Bireysel Binicilik Dersleri</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Uzman eğitmenlerle kişiye özel derslerle becerilerinizi hızla geliştirin.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Bireysel Binicilik Dersleri</h3>
+                        <p class="text-gray-600 mb-4">Uzman eğitmenlerle kişiye özel derslerle becerilerinizi hızla geliştirin.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Grup Dersleri</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Benzer seviyedeki binicilerle sosyal ve eğitici grup dersleri.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Grup Dersleri</h3>
+                        <p class="text-gray-600 mb-4">Benzer seviyedeki binicilerle sosyal ve eğitici grup dersleri.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Doğa Gezintileri</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">At sırtında eşsiz doğal güzellikleri keşfedin.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Doğa Gezintileri</h3>
+                        <p class="text-gray-600 mb-4">At sırtında eşsiz doğal güzellikleri keşfedin.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Pony Kulübü</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Çocuklar için eğlenceli ve güvenli pony binicilik dersleri.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Pony Kulübü</h3>
+                        <p class="text-gray-600 mb-4">Çocuklar için eğlenceli ve güvenli pony binicilik dersleri.</p>
                     </div>
                 </div>
-                <a href="#" class="contact-button" style="margin-top: 2.5rem; display: inline-block;">Binicilik Dersleri İçin İletişime Geçin</a>
+                <a href="#" class="contact-button mt-10">Binicilik Dersleri İçin İletişime Geçin</a>
             </div>
         </section>
 
-        <!-- Restoran - Saklı Sofra -->
         <header id="sakli-sofra" class="restoran-header-bg">
             <div class="header-content">
-                <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Restoran – Saklı Sofra</h1>
-                <p style="font-size: 1.75rem; font-weight: 300; color: #e5e7eb; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">Damak zevkinize özel lezzetler.</p>
-                <a href="#sakli-sofra-content" style="margin-top: 2.5rem; display: inline-block; background-color: #ea580c; color: white; font-size: 1.25rem; font-weight: 600; padding: 1rem 2.5rem; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" class="hover:bg-orange-700">Menüyü Keşfet</a>
+                <h1 class="text-7xl md:text-8xl font-bold mb-6 leading-tight text-white drop-shadow-lg">Restoran – Saklı Sofra</h1>
+                <p class="text-3xl md:text-4xl font-light text-gray-200 leading-relaxed text-white drop-shadow-md">Damak zevkinize özel lezzetler.</p>
+                <a href="#sakli-sofra-content" class="mt-10 inline-block bg-orange-600 hover:bg-orange-700 text-white text-xl font-semibold px-10 py-4 rounded-full transition duration-300 shadow-xl">Menüyü Keşfet</a>
             </div>
         </header>
-        <section id="sakli-sofra-content" style="margin-bottom: 5rem; text-align: center; padding: 4rem 0;">
-            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Saklı Sofra'da Gastronomik Deneyim</h2>
-            <div style="max-width: 64rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 1.5rem;">
+
+        <section id="sakli-sofra-content" class="mb-20 text-center py-16">
+            <h2 class="text-5xl font-bold text-gray-900 mb-8">Saklı Sofra'da Gastronomik Deneyim</h2>
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 lg:p-12">
+                <p class="text-gray-700 leading-relaxed text-xl mb-6">
                     Saklı Sofra, Lider Club'ın gururla sunduğu, yöresel lezzetleri modern dokunuşlarla birleştiren seçkin bir restorandır. Şeflerimizin özenle hazırladığı menümüzde, taze ve organik ürünler kullanılarak damaklarda unutulmaz tatlar bırakan yemekler servis edilmektedir. Misafirlerimize sıcak ve davetkar bir atmosferde benzersiz bir yemek deneyimi sunuyoruz.
                 </p>
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75;">
+                <p class="text-gray-700 leading-relaxed text-xl">
                     Özel günleriniz için rezervasyon yapabilir, aileniz ve sevdiklerinizle huzurlu bir ortamda lezzetli anlar geçirebilirsiniz.
                 </p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Yöresel Başlangıçlar</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Bölgenin en taze ürünleriyle hazırlanan enfes mezeler.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Yöresel Başlangıçlar</h3>
+                        <p class="text-gray-600 mb-4">Bölgenin en taze ürünleriyle hazırlanan enfes mezeler.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Ana Yemekler</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Geleneksel tariflerin modern yorumlarıyla ana yemek seçenekleri.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Ana Yemekler</h3>
+                        <p class="text-gray-600 mb-4">Geleneksel tariflerin modern yorumlarıyla ana yemek seçenekleri.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Tatlılar</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Şefin özel tatlıları ve geleneksel lezzetler.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Tatlılar</h3>
+                        <p class="text-600 mb-4">Şefin özel tatlıları ve geleneksel lezzetler.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">İçecekler</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Zengin içecek menümüzle yemeğinize eşlik edin.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">İçecekler</h3>
+                        <p class="text-gray-600 mb-4">Zengin içecek menümüzle yemeğinize eşlik edin.</p>
                     </div>
                 </div>
-                <a href="#" class="contact-button" style="margin-top: 2.5rem; display: inline-block;">Restoran İçin Rezervasyon Yapın</a>
+                <a href="#" class="contact-button mt-10">Restoran İçin Rezervasyon Yapın</a>
             </div>
         </section>
 
-        <!-- Etkinlik - Magical Event's -->
         <header id="magical-events" class="events-header-bg">
             <div class="header-content">
-                <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Etkinlik – Magical Event's</h1>
-                <p style="font-size: 1.75rem; font-weight: 300; color: #e5e7eb; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">Hayallerinizdeki etkinlikler için eşsiz mekan.</p>
-                <a href="#magical-events-content" style="margin-top: 2.5rem; display: inline-block; background-color: #7c3aed; color: white; font-size: 1.25rem; font-weight: 600; padding: 1rem 2.5rem; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" class="hover:bg-purple-700">Etkinlikleri Keşfet</a>
+                <h1 class="text-7xl md:text-8xl font-bold mb-6 leading-tight text-white drop-shadow-lg">Etkinlik – Magical Event's</h1>
+                <p class="text-3xl md:text-4xl font-light text-gray-200 leading-relaxed text-white drop-shadow-md">Hayallerinizdeki etkinlikler için eşsiz mekan.</p>
+                <a href="#magical-events-content" class="mt-10 inline-block bg-purple-600 hover:bg-purple-700 text-white text-xl font-semibold px-10 py-4 rounded-full transition duration-300 shadow-xl">Etkinlikleri Keşfet</a>
             </div>
         </header>
-        <section id="magical-events-content" style="margin-bottom: 5rem; text-align: center; padding: 4rem 0;">
-            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Magical Event's ile Unutulmaz Anlar</h2>
-            <div style="max-width: 64rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 1.5rem;">
+
+        <section id="magical-events-content" class="mb-20 text-center py-16">
+            <h2 class="text-5xl font-bold text-gray-900 mb-8">Magical Event's ile Unutulmaz Anlar</h2>
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 lg:p-12">
+                <p class="text-gray-700 leading-relaxed text-xl mb-6">
                     Magical Event's, Lider Club'ın geniş ve esnek etkinlik alanlarıyla, düğünlerden kurumsal toplantılara, özel kutlamalardan konserlere kadar her türlü etkinliğinize ev sahipliği yapar. Profesyonel ekibimiz, hayalinizdeki etkinliği gerçeğe dönüştürmek için baştan sona yanınızdadır. Her detayı özenle planlayarak, size sadece anın tadını çıkarmak kalır.
                 </p>
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75;">
+                <p class="text-gray-700 leading-relaxed text-xl">
                     Kişiye özel çözümlerimiz, modern teknik altyapımız ve kusursuz servisimizle, etkinliğinizin beklentilerinin çok ötesinde olmasını sağlıyoruz.
                 </p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Düğünler ve Nişan Törenleri</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Büyülü bir atmosferde hayallerinizdeki düğünü organize edin.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Düğünler ve Nişan Törenleri</h3>
+                        <p class="text-gray-600 mb-4">Büyülü bir atmosferde hayallerinizdeki düğünü organize edin.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Kurumsal Toplantılar</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Modern ve donanımlı salonlarımızda verimli toplantılar.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Kurumsal Toplantılar</h3>
+                        <p class="text-gray-600 mb-4">Modern ve donanımlı salonlarımızda verimli toplantılar.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Özel Kutlamalar</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Doğum günü, yıldönümü gibi özel anlarınızı kutlayın.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Özel Kutlamalar</h3>
+                        <p class="text-gray-600 mb-4">Doğum günü, yıldönümü gibi özel anlarınızı kutlayın.</p>
                     </div>
-                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
-                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Konserler ve Gösteriler</h3>
-                        <p style="color: #6b7280; margin-bottom: 1rem;">Geniş açık ve kapalı alanlarımızla her türlü performansa uygun.</p>
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 text-left">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Konserler ve Gösteriler</h3>
+                        <p class="text-gray-600 mb-4">Geniş açık ve kapalı alanlarımızla her türlü performansa uygun.</p>
                     </div>
                 </div>
-                <a href="#" class="contact-button" style="margin-top: 2.5rem; display: inline-block;">Etkinlik Düzenlemek İçin İletişime Geçin</a>
+                <a href="#" class="contact-button mt-10">Etkinlik Düzenlemek İçin İletişime Geçin</a>
             </div>
         </section>
 
-        <!-- Galeri Bölümü -->
-        <section style="margin-bottom: 5rem;">
-            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 3rem; text-align: center;">Galerimiz: Lider Club Deneyimi</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+1" alt="Galeri Görseli 1" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
-                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+2" alt="Galeri Görseli 2" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
-                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+3" alt="Galeri Görseli 3" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
-                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+4" alt="Galeri Görseli 4" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
-                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+5" alt="Galeri Görseli 5" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
-                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+6" alt="Galeri Görseli 6" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
-                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+7" alt="Galeri Görseli 7" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
-                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+8" alt="Galeri Görseli 8" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+        <section class="mb-20">
+            <h2 class="text-5xl font-bold text-gray-900 mb-12 text-center">Galerimiz: Lider Club Deneyimi</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+1" alt="Galeri Görseli 1" class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+2" alt="Galeri Görseli 2" class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+3" alt="Galeri Görseli 3" class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+4" alt="Galeri Görseli 4" class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+5" alt="Galeri Görseli 5" class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+6" alt="Galeri Görseli 6" class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+7" alt="Galeri Görseli 7" class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+8" alt="Galeri Görseli 8" class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
             </div>
         </section>
 
-        <!-- İletişim Bölümü -->
-        <section id="contact" style="text-align: center;">
-            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Bizimle İletişime Geçin</h2>
-            <div style="max-width: 48rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
-                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 2rem;">
+        <section id="contact" class="text-center">
+            <h2 class="text-5xl font-bold text-gray-900 mb-8">Bizimle İletişime Geçin</h2>
+            <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8 lg:p-12">
+                <p class="text-gray-700 leading-relaxed text-xl mb-8">
                     Lider Club'daki konaklama, restoran, binicilik veya özel etkinlikleriniz için bilgi almak isterseniz, ekibimiz size yardımcı olmaktan mutluluk duyacaktır. Size özel teklifler ve detaylı bilgi için bize ulaşın.
                 </p>
                 <a href="#" class="contact-button">Rezervasyon & Bilgi Alın</a>
@@ -638,171 +549,283 @@
         </section>
     </main>
 
-    <!-- Alt Bilgi / Footer -->
-    <footer style="background-color: #1f2937; color: white; padding: 2rem; margin-top: 4rem;">
-        <div class="container" style="text-align: center;">
-            <p style="font-size: 1.125rem; margin-bottom: 1rem;">&copy; 2025 Lider Club. Tüm Hakları Saklıdır.</p>
-            <div style="display: flex; justify-content: center; gap: 1.5rem; font-size: 1.5rem;">
-                <a href="#" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">[FB]</a>
-                <a href="#" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">[TW]</a>
-                <a href="#" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">[IG]</a>
-                <a href="#" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">[LI]</a>
+    <footer class="bg-gray-800 text-white p-8 mt-16">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-4">&copy; 2025 Lider Club. Tüm Hakları Saklıdır.</p>
+            <div class="flex justify-center mt-4 space-x-6 text-2xl">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300"><i class="fab fa-linkedin-in"></i></a>
             </div>
-            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 1.5rem;">Lider Club Türkiye</p>
+            <p class="text-sm text-gray-500 mt-6">Lider Club Türkiye</p>
         </div>
     </footer>
 
-    <!-- Oda Detay Bilgilendirme Kutucuğu (Modal) -->
     <div id="room-details-modal-overlay" class="room-modal-overlay">
-        <div class="room-modal-content" style="text-align: center;">
-            <button id="room-details-modal-close" style="position: absolute; top: 1rem; right: 1rem; color: #6b7280; font-size: 1.5rem; font-weight: bold;" aria-label="Modal Kapat">&times;</button>
-            <img id="modal-image-display" src="" alt="Detay Görseli" class="modal-image-display">
-            <h3 id="room-modal-title" style="font-size: 2.5rem; font-weight: bold; color: #111827; margin-bottom: 1rem;"></h3>
-            <p id="room-modal-description" style="color: #4b5563; font-size: 1.125rem; line-height: 1.75; margin-bottom: 1.5rem;"></p>
-            <ul id="room-modal-features" style="color: #1f2937; font-size: 1.125rem; text-align: left; display: inline-block; margin-bottom: 1.5rem;"></ul>
+        <div class="room-modal-content text-center">
+            <button id="room-details-modal-close" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            <img id="modal-image-display" src="" alt="Detay Görseli" class="modal-image-display mx-auto">
+            <h3 id="room-modal-title" class="text-4xl font-bold text-gray-900 mb-4"></h3>
+            <p id="room-modal-description" class="text-gray-700 leading-relaxed text-lg mb-6"></p>
+            <ul id="room-modal-features" class="text-gray-800 text-lg text-left inline-block mb-6">
+                </ul>
             <a href="#" class="contact-button">Hemen Rezervasyon Yapın</a>
         </div>
     </div>
 
-    <script>
-        // Mobil menü geçişi
+<script>
+    // Hata yakalama fonksiyonu
+    function safeExecute(func, functionName) {
+        try {
+            func();
+        } catch (error) {
+            console.error(`"${functionName}" fonksiyonunda hata oluştu:`, error);
+        }
+    }
+
+    // Mobil menü geçişi
+    safeExecute(() => {
         document.getElementById('nav-toggle').onclick = function () {
             document.getElementById('nav-content').classList.toggle('hidden');
-        };
+        }
+    }, 'nav-toggle');
 
-        // Markalarımız Dropdown
-        const markalarimizToggle = document.getElementById('markalarimiz-toggle');
-        const markalarimizDropdown = markalarimizToggle.closest('.dropdown');
-        markalarimizToggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            markalarimizDropdown.classList.toggle('active');
-        });
-        document.addEventListener('click', function (event) {
-            if (!markalarimizDropdown.contains(event.target) && !markalarimizToggle.contains(event.target)) {
-                markalarimizDropdown.classList.remove('active');
+    // Başlık görsellerini yükleyen ve hata durumunda placeholder gösteren fonksiyon
+    window.onload = function() {
+        safeExecute(() => {
+            // Haber sitesi benzeri galeri için JavaScript
+            const mainHeaderGalleryContainer = document.getElementById('main-header-gallery-container');
+            const galleryCaption = mainHeaderGalleryContainer?.querySelector('#gallery-caption');
+            const galleryButtonsContainer = mainHeaderGalleryContainer?.querySelector('#gallery-buttons-container');
+
+            if (!mainHeaderGalleryContainer || !galleryCaption || !galleryButtonsContainer) {
+                console.error("Gerekli galeri elementleri bulunamadı. Lütfen HTML yapısını kontrol edin.");
+                return;
             }
-        });
 
-        // Haber sitesi benzeri galeri
-        const mainHeaderGalleryContainer = document.getElementById('main-header-gallery-container');
-        const galleryCaption = document.getElementById('gallery-caption');
-        const galleryButtonsContainer = document.getElementById('gallery-buttons-container');
-        let currentImageIndex = 0;
-        let galleryInterval;
+            let currentImageIndex = 0;
+            let galleryInterval;
 
-        const imageSources = [
-            { src: 'BINICILIK.jpg', title: 'Binicilik Kulübü: Eğlenceli Anlar' },
-            { src: 'BINICILIK2.jpg', title: 'Binicilik Dersleri' },
-            { src: 'EVENT.jpg', title: 'Büyüleyici Etkinlikler' },
-            { src: 'EVENTS.jpg', title: 'Etkinlik Alanı Genel Görünüm' },
-            { src: 'events-1-880x600.jpg', title: 'Açık Hava Etkinlikleri' },
-            { src: 'HOTEL-scaled-880x600.jpg', title: 'Otel Odası Konforu' },
-            { src: 'MAGICALHOTEL.jpg', title: 'Magical Hotel Dış Görünüş' },
-            { src: 'MG-HOTEL.jpg', title: 'Magical Hotel Giriş' },
-            { src: 'SAKLISOFRA.jpg', title: 'Saklı Sofra Lezzetleri' },
-            { src: 'skl-09381-scaled.jpg', title: 'Restoran Detay' },
-            { src: 'skl-09381-scaled-880x600.jpg', title: 'Restoran Genel Görünüm' },
-            { src: 'TESIS-GENEL.jpg', title: 'Tesis Genel Manzara' },
-            { src: 'TESIS-GENEL-2048x1152.jpg', title: 'Tesis Panorama' }
-        ];
+            // Image sources
+            const imageSources = [
+                { src: 'BINICILIK.jpg', title: 'Binicilik Kulübü: Eğlenceli Anlar' },
+                { src: 'BINICILIK2.jpg', title: 'Binicilik Dersleri' },
+                { src: 'EVENT.jpg', title: 'Büyüleyici Etkinlikler' },
+                { src: 'EVENTS.jpg', title: 'Etkinlik Alanı Genel Görünüm' },
+                { src: 'events-1-880x600.jpg', title: 'Açık Hava Etkinlikleri' },
+                { src: 'HOTEL-scaled-880x600.jpg', title: 'Otel Odası Konforu' },
+                { src: 'MAGICALHOTEL.jpg', title: 'Magical Hotel Dış Görünüş' },
+                { src: 'MG-HOTEL.jpg', title: 'Magical Hotel Giriş' },
+                { src: 'SAKLISOFRA.jpg', title: 'Saklı Sofra Lezzetleri' },
+                { src: 'skl-09381-scaled.jpg', title: 'Restoran Detay' },
+                { src: 'skl-09381-scaled-880x600.jpg', title: 'Restoran Genel Görünüm' },
+                { src: 'TESIS-GENEL.jpg', title: 'Tesis Genel Manzara' },
+                { src: 'TESIS-GENEL-2048x1152.jpg', title: 'Tesis Panorama' }
+            ];
 
-        function showImage(index) {
-            const currentImages = mainHeaderGalleryContainer.querySelectorAll('.news-gallery-image');
-            currentImages.forEach((img, i) => {
-                img.classList.remove('active');
-                if (i === index) {
-                    img.classList.add('active');
-                }
+            // Dynamically create image elements with error handling
+            mainHeaderGalleryContainer.querySelectorAll('.news-gallery-image').forEach(img => safeExecute(() => img.remove(), 'remove image'));
+            imageSources.forEach((imgData, index) => {
+                safeExecute(() => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imgData.src;
+                    imgElement.alt = imgData.title;
+                    imgElement.classList.add('news-gallery-image');
+                    if (index === 0) {
+                        imgElement.classList.add('active');
+                    }
+                    imgElement.onerror = function() {
+                        console.error(`Görsel yüklenemedi: ${this.src}`);
+                        this.src = `https://placehold.co/1920x1080/ff0000/ffffff?text=G%C3%B6rsel+Y%C3%BCklenemedi`;
+                    };
+                    mainHeaderGalleryContainer.insertBefore(imgElement, galleryCaption);
+                }, `create image ${index}`);
             });
-            galleryCaption.textContent = imageSources[index].title;
-            const currentButtons = galleryButtonsContainer.querySelectorAll('button');
-            currentButtons.forEach((btn, i) => {
-                btn.classList.toggle('active', i === index);
-            });
-        }
 
-        galleryButtonsContainer.innerHTML = '';
-        imageSources.forEach((_, index) => {
-            const button = document.createElement('button');
-            button.textContent = index + 1;
-            button.addEventListener('click', () => {
-                clearInterval(galleryInterval);
-                currentImageIndex = index;
-                showImage(currentImageIndex);
-                startGalleryInterval();
-            });
-            galleryButtonsContainer.appendChild(button);
-        });
+            // Function to display the image and update caption
+            function showImage(index) {
+                safeExecute(() => {
+                    const currentImages = mainHeaderGalleryContainer.querySelectorAll('.news-gallery-image');
+                    currentImages.forEach((img, i) => {
+                        img.classList.remove('active');
+                        if (i === index) {
+                            img.classList.add('active');
+                        }
+                    });
+                    galleryCaption.textContent = imageSources[index].title;
 
-        function nextImage() {
-            currentImageIndex = (currentImageIndex + 1) % imageSources.length;
-            showImage(currentImageIndex);
-        }
+                    // Update active state of buttons
+                    const currentButtons = galleryButtonsContainer.querySelectorAll('button');
+                    currentButtons.forEach((btn, i) => {
+                        if (i === index) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                }, 'showImage');
+            }
 
-        function startGalleryInterval() {
-            galleryInterval = setInterval(nextImage, 4000);
-        }
-
-        showImage(currentImageIndex);
-        startGalleryInterval();
-
-        // Başlık görselleri yükleme
-        function loadBackgroundImage(element, url) {
-            const img = new Image();
-            img.src = url;
-            img.onload = () => element.style.backgroundImage = `url('${url}')`;
-            img.onerror = () => console.warn(`Başlık görseli yüklenemedi: ${url}`);
-        }
-
-        loadBackgroundImage(document.querySelector('.binicilik-header-bg'), 'TESIS-GENEL.jpg');
-        loadBackgroundImage(document.querySelector('.restoran-header-bg'), 'skl-09381-scaled-880x600.jpg');
-        loadBackgroundImage(document.querySelector('.events-header-bg'), 'events-1-880x600.jpg');
-
-        // Oda Detay Modal
-        const roomDetailsModalOverlay = document.getElementById('room-details-modal-overlay');
-        const roomDetailsModalClose = document.getElementById('room-details-modal-close');
-        const roomModalTitle = document.getElementById('room-modal-title');
-        const roomModalDescription = document.getElementById('room-modal-description');
-        const roomModalFeatures = document.getElementById('room-modal-features');
-        const modalImageDisplay = document.getElementById('modal-image-display');
-
-        function openModal(title, description, imageUrl, features = []) {
-            roomModalTitle.textContent = title;
-            roomModalDescription.textContent = description;
-            modalImageDisplay.src = imageUrl;
-            roomModalFeatures.innerHTML = '';
-            if (features.length > 0) {
-                features.forEach(feature => {
-                    const li = document.createElement('li');
-                    li.textContent = feature.trim();
-                    roomModalFeatures.appendChild(li);
+            // Create buttons
+            safeExecute(() => {
+                galleryButtonsContainer.innerHTML = '';
+                imageSources.forEach((imgData, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = index + 1;
+                    button.addEventListener('click', () => {
+                        safeExecute(() => {
+                            // Sadece bu iki satır yeterli, otomatik geçişi tekrar başlatmaya gerek yok.
+                            clearInterval(galleryInterval);
+                            currentImageIndex = index;
+                            showImage(currentImageIndex);
+                        }, `button click ${index}`);
+                    });
+                    galleryButtonsContainer.appendChild(button);
                 });
-                roomModalFeatures.style.display = 'block';
-            } else {
-                roomModalFeatures.style.display = 'none';
+            }, 'create buttons');
+
+            // Function for auto-slide
+            function nextImage() {
+                safeExecute(() => {
+                    currentImageIndex = (currentImageIndex + 1) % imageSources.length;
+                    showImage(currentImageIndex);
+                }, 'nextImage');
             }
-            roomDetailsModalOverlay.classList.add('active');
-        }
 
-        document.querySelectorAll('.show-room-details').forEach(button => {
-            button.addEventListener('click', function () {
-                const title = this.dataset.roomTitle;
-                const description = this.dataset.roomDescription;
-                const imageUrl = this.closest('div').querySelector('img').src;
-                const features = this.dataset.roomFeatures.split(',');
-                openModal(title, description, imageUrl, features);
-            });
-        });
-
-        roomDetailsModalClose.addEventListener('click', () => {
-            roomDetailsModalOverlay.classList.remove('active');
-        });
-
-        roomDetailsModalOverlay.addEventListener('click', function (e) {
-            if (e.target === roomDetailsModalOverlay) {
-                roomDetailsModalOverlay.classList.remove('active');
+            // Start auto-slide
+            function startGalleryInterval() {
+                safeExecute(() => {
+                    galleryInterval = setInterval(nextImage, 4000);
+                }, 'startGalleryInterval');
             }
-        });
-    </script>
+
+            // Show the first image and start auto-slide on load
+            showImage(currentImageIndex);
+            startGalleryInterval();
+
+            // Other section header backgrounds
+            safeExecute(() => {
+                const binicilikHeaderBg = document.querySelector('.binicilik-header-bg');
+                const imageUrlBinicilik = 'TESIS-GENEL.jpg';
+                const imgBinicilik = new Image();
+                imgBinicilik.src = imageUrlBinicilik;
+                imgBinicilik.onload = () => binicilikHeaderBg.style.backgroundImage = `url('${imageUrlBinicilik}')`;
+                imgBinicilik.onerror = () => console.warn('Binicilik başlık görseli yüklenemedi, varsayılan placeholder kullanılıyor.');
+
+                const restoranHeaderBg = document.querySelector('.restoran-header-bg');
+                const imageUrlRestoran = 'skl-09381-scaled-880x600.jpg';
+                const imgRestoran = new Image();
+                imgRestoran.src = imageUrlRestoran;
+                imgRestoran.onload = () => restoranHeaderBg.style.backgroundImage = `url('${imageUrlRestoran}')`;
+                imgRestoran.onerror = () => console.warn('Restoran başlık görseli yüklenemedi, varsayılan placeholder kullanılıyor.');
+
+                const eventsHeaderBg = document.querySelector('.events-header-bg');
+                const imageUrlEvents = 'events-1-880x600.jpg';
+                const imgEvents = new Image();
+                imgEvents.src = imageUrlEvents;
+                imgEvents.onload = () => eventsHeaderBg.style.backgroundImage = `url('${imageUrlEvents}')`;
+                imgEvents.onerror = () => console.warn('Etkinlik başlık görseli yüklenemedi, varsayılan placeholder kullanılıyor.');
+            }, 'header backgrounds');
+
+            // Dropdown menu for "Markalarımız"
+            safeExecute(() => {
+                const markalarimizToggle = document.getElementById('markalarimiz-toggle');
+                const markalarimizDropdown = markalarimizToggle?.closest('.dropdown');
+                if (markalarimizToggle && markalarimizDropdown) {
+                    markalarimizToggle.addEventListener('click', function(event) {
+                        safeExecute(() => {
+                            event.preventDefault();
+                            markalarimizDropdown.classList.toggle('active');
+                        }, 'markalarimizToggle click');
+                    });
+                }
+                document.addEventListener('click', function(event) {
+                    safeExecute(() => {
+                        if (markalarimizDropdown && !markalarimizDropdown.contains(event.target) && !markalarimizToggle.contains(event.target)) {
+                            markalarimizDropdown.classList.remove('active');
+                        }
+                    }, 'document click');
+                });
+            }, 'Markalarimiz Dropdown');
+
+            // Room Details Modal functionality
+            safeExecute(() => {
+                const roomDetailsModalOverlay = document.getElementById('room-details-modal-overlay');
+                const roomDetailsModalClose = document.getElementById('room-details-modal-close');
+                const roomModalTitle = document.getElementById('room-modal-title');
+                const roomModalDescription = document.getElementById('room-modal-description');
+                const roomModalFeatures = document.getElementById('room-modal-features');
+                const modalImageDisplay = document.getElementById('modal-image-display');
+
+                function openModal(title, description, imageUrl, features = []) {
+                    safeExecute(() => {
+                        if (roomModalTitle) roomModalTitle.textContent = title;
+                        if (roomModalDescription) roomModalDescription.textContent = description;
+                        if (modalImageDisplay) modalImageDisplay.src = imageUrl;
+
+                        if (roomModalFeatures) {
+                            roomModalFeatures.innerHTML = '';
+                            if (features.length > 0) {
+                                features.forEach(feature => {
+                                    const li = document.createElement('li');
+                                    li.textContent = feature.trim();
+                                    roomModalFeatures.appendChild(li);
+                                });
+                                roomModalFeatures.style.display = 'block';
+                            } else {
+                                roomModalFeatures.style.display = 'none';
+                            }
+                        }
+
+                        if (roomDetailsModalOverlay) roomDetailsModalOverlay.classList.add('active');
+                    }, 'openModal');
+                }
+
+                const roomDetailButtons = document.querySelectorAll('.show-room-details');
+                roomDetailButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        safeExecute(() => {
+                            const title = this.dataset.roomTitle;
+                            const description = this.dataset.roomDescription;
+                            const roomPlaceholderImage = 'https://placehold.co/700x450/dbeafe/1e3a8a?text=Oda+Görseli';
+                            const features = this.dataset.roomFeatures.split(',');
+                            openModal(title, description, roomPlaceholderImage, features);
+                        }, 'show-room-details click');
+                    });
+                });
+
+                const imageCards = document.querySelectorAll('.image-card-item');
+                imageCards.forEach(card => {
+                    card.addEventListener('click', function() {
+                        safeExecute(() => {
+                            const imageUrl = this.dataset.imageSrc;
+                            const imageTitle = this.dataset.imageTitle;
+                            openModal(imageTitle, '', imageUrl);
+                        }, 'image-card click');
+                    });
+                });
+
+                if (roomDetailsModalClose) {
+                    roomDetailsModalClose.addEventListener('click', function() {
+                        safeExecute(() => {
+                            roomDetailsModalOverlay?.classList.remove('active');
+                        }, 'modal close');
+                    });
+                }
+
+                if (roomDetailsModalOverlay) {
+                    roomDetailsModalOverlay.addEventListener('click', function(e) {
+                        safeExecute(() => {
+                            if (e.target === roomDetailsModalOverlay) {
+                                roomDetailsModalOverlay.classList.remove('active');
+                            }
+                        }, 'modal overlay click');
+                    });
+                }
+            }, 'Room Details Modal');
+        }, 'window.onload');
+    };
+</script>
 </body>
 </html>
