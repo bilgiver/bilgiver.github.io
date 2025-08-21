@@ -1,46 +1,808 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr" style="scroll-behavior: smooth;">
 <head>
-    <title>Canlı Dolar Kuru</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lider Club bünyesindeki Magical House, lüks konaklama, binicilik, restoran ve etkinlik hizmetleri sunar. Eşsiz deneyimler için hemen keşfedin!">
+    <meta name="keywords" content="Magical House, Lider Club, lüks konaklama, binicilik, restoran, etkinlik, Saklı Sofra, Magical Events">
+    <meta name="author" content="Lider Club">
+    <title>Magical House - Lider Club | Lüks Konaklama ve Etkinlikler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        h1, h2, h3 {
+            font-family: 'Times New Roman', serif;
+        }
+        .header-bg, .binicilik-header-bg, .restoran-header-bg, .events-header-bg {
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .header-bg::before, .binicilik-header-bg::before, .restoran-header-bg::before, .events-header-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1;
+        }
+        .header-content {
+            z-index: 2;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            z-index: 50;
+        }
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: #374151;
+            text-decoration: none;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f3f4f6;
+        }
+        .card-button {
+            background-color: #1d4ed8;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        .card-button:hover {
+            background-color: #1e40af;
+        }
+        .contact-button {
+            background-color: #15803d;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        .contact-button:hover {
+            background-color: #166534;
+        }
+        .room-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .room-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .room-modal-content {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .room-modal-overlay.active .room-modal-content {
+            transform: translateY(0);
+        }
+        .room-modal-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .room-modal-content ul {
+            list-style: disc;
+            padding-left: 1.5rem;
+            margin-top: 1rem;
+        }
+        .room-modal-content li {
+            margin-bottom: 0.5rem;
+        }
+        .brand-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        .brand-card:hover {
+            transform: scale(1.05);
+        }
+        .brand-card img {
+            width: 100%;
+            height: 12rem;
+            object-fit: cover;
+        }
+        .brand-card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .brand-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        .brand-card p {
+            color: #4b5563;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .brand-card-link {
+            display: inline-block;
+            background-color: #1f2937;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .brand-card-link:hover {
+            background-color: #374151;
+        }
+        .news-gallery-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            z-index: 0;
+        }
+        .news-gallery-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .news-gallery-image.active {
+            display: block;
+            opacity: 1;
+        }
+        .news-gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            z-index: 2;
+        }
+        .gallery-nav-buttons {
+            position: absolute;
+            bottom: 6rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            z-index: 2;
+        }
+        .gallery-nav-buttons button {
+            background-color: #4b5563;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .gallery-nav-buttons button:hover {
+            background-color: #6b7280;
+        }
+        .gallery-nav-buttons button.active {
+            background-color: #1d4ed8;
+        }
+        .modal-image-display {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        nav {
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .flex {
+            display: flex;
+        }
+        .justify-between {
+            justify-content: space-between;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .hidden {
+            display: none;
+        }
+        @media (min-width: 1024px) {
+            .lg\:flex {
+                display: flex;
+            }
+            .lg\:hidden {
+                display: none;
+            }
+            .lg\:inline-block {
+                display: inline-block;
+            }
+            .lg\:flex-grow {
+                flex-grow: 1;
+            }
+            .lg\:justify-end {
+                justify-content: flex-end;
+            }
+        }
+        @media (max-width: 1023px) {
+            .gallery-nav-buttons button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Üst Menü / Navbar -->
+    <nav>
+        <div class="container flex justify-between items-center flex-wrap">
+            <!-- Logo -->
+            <div class="flex items-center flex-shrink-0 mr-6">
+                <img src="https://placehold.co/60x60/f0f2f5/2c3e50?text=LC" alt="Lider Club Logo" style="height: 4rem; width: 4rem; border-radius: 50%; margin-right: 1rem;">
+                <span style="font-size: 1.875rem; font-weight: 600; color: #111827;">Lider Club</span>
+            </div>
+            <!-- Mobil Menü Düğmesi -->
+            <div class="lg:hidden">
+                <button id="nav-toggle" style="padding: 0.5rem 0.75rem; border: 1px solid #4b5563; border-radius: 0.25rem; color: #4b5563;" aria-label="Menüyü Aç/Kapat">
+                    [☰]
+                </button>
+            </div>
+            <!-- Menü Öğeleri -->
+            <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden" id="nav-content">
+                <ul class="lg:flex-grow lg:flex lg:justify-end" style="list-style: none; margin: 0; padding: 0;">
+                    <li><a href="#" style="display: block; margin: 1rem 0; color: #4b5563; font-weight: 500; text-decoration: none;" class="lg:inline-block lg:mt-0 mr-6">Anasayfa</a></li>
+                    <li><a href="#" style="display: block; margin: 1rem 0; color: #4b5563; font-weight: 500; text-decoration: none;" class="lg:inline-block lg:mt-0 mr-6">Hakkımızda</a></li>
+                    <li class="relative dropdown">
+                        <a href="#" id="markalarimiz-toggle" style="display: block; margin: 1rem 0; color: #4b5563; font-weight: 500; text-decoration: none;" class="lg:inline-block lg:mt-0 mr-6">
+                            Markalarımız [▼]
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="#binicilik" style="color: #374151;">Binicilik - Magical Club</a>
+                            <a href="#sakli-sofra" style="color: #374151;">Restoran - Saklı Sofra</a>
+                            <a href="#accommodation" style="color: #374151;">Konaklama - Magical House</a>
+                            <a href="#magical-events" style="color: #374151;">Etkinlik - Magical Event's</a>
+                        </div>
+                    </li>
+                    <li><a href="#" style="display: block; margin: 1rem 0; color: #4b5563; font-weight: 500; text-decoration: none;" class="lg:inline-block lg:mt-0">İletişim</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <h1>Canlı Dolar Kuru</h1>
-    <p>Son Güncelleme: <span id="son-guncelleme"></span></p>
+    <!-- Ana Başlık ve Görsel Bölümü -->
+    <header class="header-bg">
+        <div class="news-gallery-container" id="main-header-gallery-container">
+            <img src="BINICILIK.jpg" alt="Binicilik Kulübü Atlar" class="news-gallery-image active" data-title="Binicilik Kulübü: Eğlenceli Anlar">
+            <img src="BINICILIK2.jpg" alt="Binicilik Kulübü Eğitmen ve Öğrenci" class="news-gallery-image" data-title="Binicilik Dersleri">
+            <img src="EVENT.jpg" alt="Magical Events Konser Sahnesi" class="news-gallery-image" data-title="Büyüleyici Etkinlikler">
+            <img src="EVENTS.jpg" alt="Magical Events Toplantı Odası" class="news-gallery-image" data-title="Profesyonel Etkinlik Alanları">
+            <img src="events-1-880x600.jpg" alt="Magical Events Dış Alan" class="news-gallery-image" data-title="Açık Hava Etkinlikleri">
+            <img src="HOTEL-scaled-880x600.jpg" alt="Magical House Hotel Odası" class="news-gallery-image" data-title="Konforlu Otel Odaları">
+            <img src="MAGICALHOTEL.jpg" alt="Magical House Hotel Dış Görünüş" class="news-gallery-image" data-title="Magical House Genel Bakış">
+            <img src="MG-HOTEL.jpg" alt="MG Hotel Lobisi" class="news-gallery-image" data-title="Otel Lobisi">
+            <img src="SAKLISOFRA.jpg" alt="Saklı Sofra Restoran Ortamı" class="news-gallery-image" data-title="Saklı Sofra: Lezzet Durağı">
+            <img src="skl-09381-scaled.jpg" alt="Saklı Sofra Mutfak Detayı" class="news-gallery-image" data-title="Şefin Lezzetleri">
+            <img src="skl-09381-scaled-880x600.jpg" alt="Restoran Genel Görünüm" class="news-gallery-image" data-title="Restoran Genel Görünüm">
+            <img src="TESIS-GENEL.jpg" alt="Tesis Genel Görünüm 1" class="news-gallery-image" data-title="Geniş Tesis Alanları">
+            <img src="TESIS-GENEL-2048x1152.jpg" alt="Tesis Genel Görünüm 2" class="news-gallery-image" data-title="Lider Club Panoraması">
+            <div class="news-gallery-caption" id="gallery-caption"></div>
+            <div class="gallery-nav-buttons" id="gallery-buttons-container"></div>
+        </div>
+        <div class="header-content">
+            <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Magical House</h1>
+            <p style="font-size: 1.75rem; font-weight: 300; color: #e5e7eb; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">Lider Club'ın eşsiz konaklama deneyimiyle tanışın.</p>
+            <a href="#accommodation" style="margin-top: 2.5rem; display: inline-block; background-color: #2563eb; color: white; font-size: 1.25rem; font-weight: 600; padding: 1rem 2.5rem; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" class="hover:bg-blue-700">Hemen Keşfedin</a>
+        </div>
+    </header>
 
-    <div id="kur-bilgisi">
-        <p>Yükleniyor...</p>
+    <main class="container" style="padding: 4rem 1.5rem;">
+        <section id="welcome" style="margin-bottom: 5rem; text-align: center;">
+            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Magical House'a Hoş Geldiniz</h2>
+            <div style="max-width: 64rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 1.5rem;">
+                    Lider Club bünyesindeki Magical House, doğanın huzurunu modern lüksle birleştiren özel bir konaklama destinasyonudur. Şehrin karmaşasından uzaklaşarak kendinizi yenileyeceğiniz, ayrıcalıklı bir kaçış noktası sunuyoruz. Her bir detay, misafirlerimizin beklentilerinin ötesinde bir konfor ve estetik sunmak üzere özenle düşünülmüştür.
+                </p>
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75;">
+                    Unutulmaz anılar biriktirmek, eşsiz bir dinlenme deneyimi yaşamak veya özel etkinliklerinizi düzenlemek için Magical House, kalite ve huzurun buluştuğu adresinizdir.
+                </p>
+            </div>
+        </section>
+
+        <!-- Markalarımızı Keşfedin -->
+        <section id="our-brands-section" style="margin-bottom: 5rem; text-align: center; padding: 4rem 0;">
+            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 3rem;">Markalarımızı Keşfedin</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <a href="#accommodation" class="brand-card">
+                    <img src="MAGICALHOTEL.jpg" alt="Magical House Konaklama" onerror="this.src='https://placehold.co/700x480/dbeafe/1e3a8a?text=Magical+House';">
+                    <div class="brand-card-content">
+                        <h3>Magical House</h3>
+                        <p>Lüks konaklama ve eşsiz dinlenme deneyimleri.</p>
+                        <span class="brand-card-link">Keşfet</span>
+                    </div>
+                </a>
+                <a href="#binicilik" class="brand-card">
+                    <img src="BINICILIK.jpg" alt="Binicilik Magical Club" onerror="this.src='https://placehold.co/700x480/a7d9b9/3c7b5b?text=Magical+Club+Binicilik';">
+                    <div class="brand-card-content">
+                        <h3>Magical Club Binicilik</h3>
+                        <p>Atlarla doğa içinde huzurlu ve eğitici deneyimler.</p>
+                        <span class="brand-card-link">Keşfet</span>
+                    </div>
+                </a>
+                <a href="#sakli-sofra" class="brand-card">
+                    <img src="SAKLISOFRA.jpg" alt="Saklı Sofra Restoran" onerror="this.src='https://placehold.co/700x480/f7d794/a36e00?text=Sakl%C4%B1+Sofra+Restoran';">
+                    <div class="brand-card-content">
+                        <h3>Restoran - Saklı Sofra</h3>
+                        <p>Yöresel ve modern lezzetlerin buluştuğu eşsiz mutfak.</p>
+                        <span class="brand-card-link">Keşfet</span>
+                    </div>
+                </a>
+                <a href="#magical-events" class="brand-card">
+                    <img src="EVENT.jpg" alt="Magical Events" onerror="this.src='https://placehold.co/700x480/c8bbf7/5a3d90?text=Magical+Events';">
+                    <div class="brand-card-content">
+                        <h3>Etkinlik - Magical Event's</h3>
+                        <p>Hayallerinizdeki özel günler ve etkinlikler için mekan.</p>
+                        <span class="brand-card-link">Keşfet</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Konaklama Seçenekleri / Odalar -->
+        <section id="accommodation" style="margin-bottom: 5rem;">
+            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 3rem; text-align: center;">Ayrıcalıklı Konaklama Seçeneklerimiz</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem;">
+                <div style="background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s ease;">
+                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=L%C3%BCks+Deluxe+Oda" alt="Deluxe Oda" style="width: 100%; height: 16rem; object-fit: cover;">
+                    <div style="padding: 2rem;">
+                        <h3 style="font-size: 1.875rem; font-weight: 600; color: #111827; margin-bottom: 0.75rem;">Deluxe Oda</h3>
+                        <p style="color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">Zarafetle tasarlanmış, geniş ve ferah Deluxe Odalarımızda lüksün ve konforun tadını çıkarın. Şehir veya doğa manzarası seçenekleriyle.</p>
+                        <ul style="color: #1f2937; list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5rem;">
+                            <li>King-size Yatak Seçeneği</li>
+                            <li>Geniş Çalışma Alanı</li>
+                            <li>Ücretsiz Yüksek Hızlı Wi-Fi</li>
+                            <li>Akıllı TV ve Minibar</li>
+                            <li>Doğa Manzarası (Seçenekli)</li>
+                        </ul>
+                        <button class="card-button show-room-details"
+                                data-room-id="deluxe"
+                                data-room-title="Deluxe Oda"
+                                data-room-description="Zarafetle tasarlanmış, geniş ve ferah Deluxe Odalarımızda lüksün ve konforun tadını çıkarın. Şehir veya doğa manzarası seçenekleriyle."
+                                data-room-features="King-size Yatak Seçeneği,Geniş Çalışma Alanı,Ücretsiz Yüksek Hızlı Wi-Fi,Akıllı TV ve Minibar,Doğa Manzarası (Seçenekli)">Detayları İncele</button>
+                    </div>
+                </div>
+                <div style="background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s ease;">
+                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=Konforlu+Suit" alt="Suit Oda" style="width: 100%; height: 16rem; object-fit: cover;">
+                    <div style="padding: 2rem;">
+                        <h3 style="font-size: 1.875rem; font-weight: 600; color: #111827; margin-bottom: 0.75rem;">Suit Oda</h3>
+                        <p style="color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">Misafirlerimize özel olarak hazırlanan suitlerimiz, benzersiz bir konaklama deneyimi için geniş alan ve ayrıcalıklı olanaklar sunar.</p>
+                        <ul style="color: #1f2937; list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5rem;">
+                            <li>Ayrı Oturma Odası</li>
+                            <li>Özel Tasarım Banyo</li>
+                            <li>Kahve Makinesi</li>
+                            <li>Panoramik Manzara</li>
+                            <li>Özel Balkon veya Teras</li>
+                        </ul>
+                        <button class="card-button show-room-details"
+                                data-room-id="suit"
+                                data-room-title="Suit Oda"
+                                data-room-description="Misafirlerimize özel olarak hazırlanan suitlerimiz, benzersiz bir konaklama deneyimi için geniş alan ve ayrıcalıklı olanaklar sunar."
+                                data-room-features="Ayrı Oturma Odası,Özel Tasarım Banyo,Kahve Makinesi,Panoramik Manzara,Özel Balkon veya Teras">Detayları İncele</button>
+                    </div>
+                </div>
+                <div style="background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s ease;">
+                    <img src="https://placehold.co/700x450/dbeafe/1e3a8a?text=Geni%C5%9F+Aile+Odalar%C4%B1" alt="Aile Odaları" style="width: 100%; height: 16rem; object-fit: cover;">
+                    <div style="padding: 2rem;">
+                        <h3 style="font-size: 1.875rem; font-weight: 600; color: #111827; margin-bottom: 0.75rem;">Aile Odaları</h3>
+                        <p style="color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">Tüm ailenizin konforu düşünülerek tasarlanmış geniş odalarımızda keyifli ve unutulmaz anlar yaşayın.</p>
+                        <ul style="color: #1f2937; list-style: disc; padding-left: 1.5rem; margin-bottom: 1.5rem;">
+                            <li>Bağlantılı Oda Seçeneği</li>
+                            <li>Çocuklar İçin Özel Alanlar</li>
+                            <li>Ekstra Yatak İmkanı</li>
+                            <li>Oyun Konsolu (Talep Üzerine)</li>
+                            <li>Açık Hava Alanı Erişimi</li>
+                        </ul>
+                        <button class="card-button show-room-details"
+                                data-room-id="family"
+                                data-room-title="Aile Odaları"
+                                data-room-description="Tüm ailenizin konforu düşünülerek tasarlanmış geniş odalarımızda keyifli ve unutulmaz anlar yaşayın."
+                                data-room-features="Bağlantılı Oda Seçeneği,Çocuklar İçin Özel Alanlar,Ekstra Yatak İmkanı,Oyun Konsolu (Talep Üzerine),Açık Hava Alanı Erişimi">Detayları İncele</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Binicilik - Magical Club -->
+        <header id="binicilik" class="binicilik-header-bg">
+            <div class="header-content">
+                <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Binicilik – Magical Club</h1>
+                <p style="font-size: 1.75rem; font-weight: 300; color: #e5e7eb; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">Atların asil dünyasıyla buluşun.</p>
+                <a href="#magical-club-content" style="margin-top: 2.5rem; display: inline-block; background-color: #ca8a04; color: white; font-size: 1.25rem; font-weight: 600; padding: 1rem 2.5rem; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" class="hover:bg-yellow-700">Daha Fazlasını Keşfet</a>
+            </div>
+        </header>
+        <section id="magical-club-content" style="margin-bottom: 5rem; text-align: center; padding: 4rem 0;">
+            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Magical Club Binicilik Deneyimi</h2>
+            <div style="max-width: 64rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 1.5rem;">
+                    Lider Club'ın bir parçası olan Magical Club Binicilik, her seviyeden biniciye hitap eden profesyonel binicilik dersleri ve eşsiz at deneyimleri sunar. Deneyimli eğitmenlerimiz eşliğinde, atlarla güvenli ve keyifli bir bağ kurabilir, doğanın içinde özgürce dört nala koşmanın tadını çıkarabilirsiniz.
+                </p>
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75;">
+                    Modern tesislerimiz ve iyi eğitimli atlarımızla, binicilik tutkunuzu keşfetmeniz veya mevcut becerilerinizi geliştirmeniz için ideal bir ortam sağlıyoruz.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Bireysel Binicilik Dersleri</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Uzman eğitmenlerle kişiye özel derslerle becerilerinizi hızla geliştirin.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Grup Dersleri</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Benzer seviyedeki binicilerle sosyal ve eğitici grup dersleri.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Doğa Gezintileri</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">At sırtında eşsiz doğal güzellikleri keşfedin.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Pony Kulübü</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Çocuklar için eğlenceli ve güvenli pony binicilik dersleri.</p>
+                    </div>
+                </div>
+                <a href="#" class="contact-button" style="margin-top: 2.5rem; display: inline-block;">Binicilik Dersleri İçin İletişime Geçin</a>
+            </div>
+        </section>
+
+        <!-- Restoran - Saklı Sofra -->
+        <header id="sakli-sofra" class="restoran-header-bg">
+            <div class="header-content">
+                <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Restoran – Saklı Sofra</h1>
+                <p style="font-size: 1.75rem; font-weight: 300; color: #e5e7eb; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">Damak zevkinize özel lezzetler.</p>
+                <a href="#sakli-sofra-content" style="margin-top: 2.5rem; display: inline-block; background-color: #ea580c; color: white; font-size: 1.25rem; font-weight: 600; padding: 1rem 2.5rem; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" class="hover:bg-orange-700">Menüyü Keşfet</a>
+            </div>
+        </header>
+        <section id="sakli-sofra-content" style="margin-bottom: 5rem; text-align: center; padding: 4rem 0;">
+            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Saklı Sofra'da Gastronomik Deneyim</h2>
+            <div style="max-width: 64rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 1.5rem;">
+                    Saklı Sofra, Lider Club'ın gururla sunduğu, yöresel lezzetleri modern dokunuşlarla birleştiren seçkin bir restorandır. Şeflerimizin özenle hazırladığı menümüzde, taze ve organik ürünler kullanılarak damaklarda unutulmaz tatlar bırakan yemekler servis edilmektedir. Misafirlerimize sıcak ve davetkar bir atmosferde benzersiz bir yemek deneyimi sunuyoruz.
+                </p>
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75;">
+                    Özel günleriniz için rezervasyon yapabilir, aileniz ve sevdiklerinizle huzurlu bir ortamda lezzetli anlar geçirebilirsiniz.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Yöresel Başlangıçlar</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Bölgenin en taze ürünleriyle hazırlanan enfes mezeler.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Ana Yemekler</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Geleneksel tariflerin modern yorumlarıyla ana yemek seçenekleri.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Tatlılar</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Şefin özel tatlıları ve geleneksel lezzetler.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">İçecekler</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Zengin içecek menümüzle yemeğinize eşlik edin.</p>
+                    </div>
+                </div>
+                <a href="#" class="contact-button" style="margin-top: 2.5rem; display: inline-block;">Restoran İçin Rezervasyon Yapın</a>
+            </div>
+        </section>
+
+        <!-- Etkinlik - Magical Event's -->
+        <header id="magical-events" class="events-header-bg">
+            <div class="header-content">
+                <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Etkinlik – Magical Event's</h1>
+                <p style="font-size: 1.75rem; font-weight: 300; color: #e5e7eb; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">Hayallerinizdeki etkinlikler için eşsiz mekan.</p>
+                <a href="#magical-events-content" style="margin-top: 2.5rem; display: inline-block; background-color: #7c3aed; color: white; font-size: 1.25rem; font-weight: 600; padding: 1rem 2.5rem; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" class="hover:bg-purple-700">Etkinlikleri Keşfet</a>
+            </div>
+        </header>
+        <section id="magical-events-content" style="margin-bottom: 5rem; text-align: center; padding: 4rem 0;">
+            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Magical Event's ile Unutulmaz Anlar</h2>
+            <div style="max-width: 64rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 1.5rem;">
+                    Magical Event's, Lider Club'ın geniş ve esnek etkinlik alanlarıyla, düğünlerden kurumsal toplantılara, özel kutlamalardan konserlere kadar her türlü etkinliğinize ev sahipliği yapar. Profesyonel ekibimiz, hayalinizdeki etkinliği gerçeğe dönüştürmek için baştan sona yanınızdadır. Her detayı özenle planlayarak, size sadece anın tadını çıkarmak kalır.
+                </p>
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75;">
+                    Kişiye özel çözümlerimiz, modern teknik altyapımız ve kusursuz servisimizle, etkinliğinizin beklentilerinin çok ötesinde olmasını sağlıyoruz.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Düğünler ve Nişan Törenleri</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Büyülü bir atmosferde hayallerinizdeki düğünü organize edin.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Kurumsal Toplantılar</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Modern ve donanımlı salonlarımızda verimli toplantılar.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Özel Kutlamalar</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Doğum günü, yıldönümü gibi özel anlarınızı kutlayın.</p>
+                    </div>
+                    <div style="background-color: #f9fafb; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 1.5rem; text-align: left;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem;">Konserler ve Gösteriler</h3>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Geniş açık ve kapalı alanlarımızla her türlü performansa uygun.</p>
+                    </div>
+                </div>
+                <a href="#" class="contact-button" style="margin-top: 2.5rem; display: inline-block;">Etkinlik Düzenlemek İçin İletişime Geçin</a>
+            </div>
+        </section>
+
+        <!-- Galeri Bölümü -->
+        <section style="margin-bottom: 5rem;">
+            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 3rem; text-align: center;">Galerimiz: Lider Club Deneyimi</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+1" alt="Galeri Görseli 1" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+2" alt="Galeri Görseli 2" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+3" alt="Galeri Görseli 3" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+4" alt="Galeri Görseli 4" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+5" alt="Galeri Görseli 5" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+6" alt="Galeri Görseli 6" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+7" alt="Galeri Görseli 7" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+                <img src="https://placehold.co/500x350/e0e0e0/555555?text=L%C3%BCks+Mekan+8" alt="Galeri Görseli 8" style="width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s ease;">
+            </div>
+        </section>
+
+        <!-- İletişim Bölümü -->
+        <section id="contact" style="text-align: center;">
+            <h2 style="font-size: 3rem; font-weight: bold; color: #111827; margin-bottom: 2rem;">Bizimle İletişime Geçin</h2>
+            <div style="max-width: 48rem; margin: 0 auto; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 2rem;">
+                <p style="color: #4b5563; font-size: 1.25rem; line-height: 1.75; margin-bottom: 2rem;">
+                    Lider Club'daki konaklama, restoran, binicilik veya özel etkinlikleriniz için bilgi almak isterseniz, ekibimiz size yardımcı olmaktan mutluluk duyacaktır. Size özel teklifler ve detaylı bilgi için bize ulaşın.
+                </p>
+                <a href="#" class="contact-button">Rezervasyon & Bilgi Alın</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Alt Bilgi / Footer -->
+    <footer style="background-color: #1f2937; color: white; padding: 2rem; margin-top: 4rem;">
+        <div class="container" style="text-align: center;">
+            <p style="font-size: 1.125rem; margin-bottom: 1rem;">&copy; 2025 Lider Club. Tüm Hakları Saklıdır.</p>
+            <div style="display: flex; justify-content: center; gap: 1.5rem; font-size: 1.5rem;">
+                <a href="#" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">[FB]</a>
+                <a href="#" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">[TW]</a>
+                <a href="#" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">[IG]</a>
+                <a href="#" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">[LI]</a>
+            </div>
+            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 1.5rem;">Lider Club Türkiye</p>
+        </div>
+    </footer>
+
+    <!-- Oda Detay Bilgilendirme Kutucuğu (Modal) -->
+    <div id="room-details-modal-overlay" class="room-modal-overlay">
+        <div class="room-modal-content" style="text-align: center;">
+            <button id="room-details-modal-close" style="position: absolute; top: 1rem; right: 1rem; color: #6b7280; font-size: 1.5rem; font-weight: bold;" aria-label="Modal Kapat">&times;</button>
+            <img id="modal-image-display" src="" alt="Detay Görseli" class="modal-image-display">
+            <h3 id="room-modal-title" style="font-size: 2.5rem; font-weight: bold; color: #111827; margin-bottom: 1rem;"></h3>
+            <p id="room-modal-description" style="color: #4b5563; font-size: 1.125rem; line-height: 1.75; margin-bottom: 1.5rem;"></p>
+            <ul id="room-modal-features" style="color: #1f2937; font-size: 1.125rem; text-align: left; display: inline-block; margin-bottom: 1.5rem;"></ul>
+            <a href="#" class="contact-button">Hemen Rezervasyon Yapın</a>
+        </div>
     </div>
 
     <script>
-        const xmlUrl = 'https://www.tcmb.gov.tr/kurlar/today.xml';
+        // Mobil menü geçişi
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById('nav-content').classList.toggle('hidden');
+        };
 
-        fetch(xmlUrl)
-            .then(response => response.text())
-            .then(data => {
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(data, 'text/xml');
-                const usdKur = xmlDoc.querySelector('Currency[Kod="USD"]');
-                
-                if (usdKur) {
-                    const forexBuying = usdKur.querySelector('ForexBuying').textContent;
-                    const forexSelling = usdKur.querySelector('ForexSelling').textContent;
-                    const date = xmlDoc.querySelector('Tarih_Date').getAttribute('Tarih');
+        // Markalarımız Dropdown
+        const markalarimizToggle = document.getElementById('markalarimiz-toggle');
+        const markalarimizDropdown = markalarimizToggle.closest('.dropdown');
+        markalarimizToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            markalarimizDropdown.classList.toggle('active');
+        });
+        document.addEventListener('click', function (event) {
+            if (!markalarimizDropdown.contains(event.target) && !markalarimizToggle.contains(event.target)) {
+                markalarimizDropdown.classList.remove('active');
+            }
+        });
 
-                    document.getElementById('kur-bilgisi').innerHTML = `
-                        <p><strong>Döviz Alış:</strong> ${forexBuying} TL</p>
-                        <p><strong>Döviz Satış:</strong> ${forexSelling} TL</p>
-                    `;
-                    document.getElementById('son-guncelleme').textContent = date;
-                } else {
-                    document.getElementById('kur-bilgisi').innerHTML = '<p>Dolar kuru bilgisi bulunamadı.</p>';
+        // Haber sitesi benzeri galeri
+        const mainHeaderGalleryContainer = document.getElementById('main-header-gallery-container');
+        const galleryCaption = document.getElementById('gallery-caption');
+        const galleryButtonsContainer = document.getElementById('gallery-buttons-container');
+        let currentImageIndex = 0;
+        let galleryInterval;
+
+        const imageSources = [
+            { src: 'BINICILIK.jpg', title: 'Binicilik Kulübü: Eğlenceli Anlar' },
+            { src: 'BINICILIK2.jpg', title: 'Binicilik Dersleri' },
+            { src: 'EVENT.jpg', title: 'Büyüleyici Etkinlikler' },
+            { src: 'EVENTS.jpg', title: 'Etkinlik Alanı Genel Görünüm' },
+            { src: 'events-1-880x600.jpg', title: 'Açık Hava Etkinlikleri' },
+            { src: 'HOTEL-scaled-880x600.jpg', title: 'Otel Odası Konforu' },
+            { src: 'MAGICALHOTEL.jpg', title: 'Magical Hotel Dış Görünüş' },
+            { src: 'MG-HOTEL.jpg', title: 'Magical Hotel Giriş' },
+            { src: 'SAKLISOFRA.jpg', title: 'Saklı Sofra Lezzetleri' },
+            { src: 'skl-09381-scaled.jpg', title: 'Restoran Detay' },
+            { src: 'skl-09381-scaled-880x600.jpg', title: 'Restoran Genel Görünüm' },
+            { src: 'TESIS-GENEL.jpg', title: 'Tesis Genel Manzara' },
+            { src: 'TESIS-GENEL-2048x1152.jpg', title: 'Tesis Panorama' }
+        ];
+
+        function showImage(index) {
+            const currentImages = mainHeaderGalleryContainer.querySelectorAll('.news-gallery-image');
+            currentImages.forEach((img, i) => {
+                img.classList.remove('active');
+                if (i === index) {
+                    img.classList.add('active');
                 }
-            })
-            .catch(error => {
-                console.error('Veri çekme hatası:', error);
-                document.getElementById('kur-bilgisi').innerHTML = '<p>Döviz kurları alınırken bir hata oluştu.</p>';
             });
-    </script>
+            galleryCaption.textContent = imageSources[index].title;
+            const currentButtons = galleryButtonsContainer.querySelectorAll('button');
+            currentButtons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+        }
 
+        galleryButtonsContainer.innerHTML = '';
+        imageSources.forEach((_, index) => {
+            const button = document.createElement('button');
+            button.textContent = index + 1;
+            button.addEventListener('click', () => {
+                clearInterval(galleryInterval);
+                currentImageIndex = index;
+                showImage(currentImageIndex);
+                startGalleryInterval();
+            });
+            galleryButtonsContainer.appendChild(button);
+        });
+
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % imageSources.length;
+            showImage(currentImageIndex);
+        }
+
+        function startGalleryInterval() {
+            galleryInterval = setInterval(nextImage, 4000);
+        }
+
+        showImage(currentImageIndex);
+        startGalleryInterval();
+
+        // Başlık görselleri yükleme
+        function loadBackgroundImage(element, url) {
+            const img = new Image();
+            img.src = url;
+            img.onload = () => element.style.backgroundImage = `url('${url}')`;
+            img.onerror = () => console.warn(`Başlık görseli yüklenemedi: ${url}`);
+        }
+
+        loadBackgroundImage(document.querySelector('.binicilik-header-bg'), 'TESIS-GENEL.jpg');
+        loadBackgroundImage(document.querySelector('.restoran-header-bg'), 'skl-09381-scaled-880x600.jpg');
+        loadBackgroundImage(document.querySelector('.events-header-bg'), 'events-1-880x600.jpg');
+
+        // Oda Detay Modal
+        const roomDetailsModalOverlay = document.getElementById('room-details-modal-overlay');
+        const roomDetailsModalClose = document.getElementById('room-details-modal-close');
+        const roomModalTitle = document.getElementById('room-modal-title');
+        const roomModalDescription = document.getElementById('room-modal-description');
+        const roomModalFeatures = document.getElementById('room-modal-features');
+        const modalImageDisplay = document.getElementById('modal-image-display');
+
+        function openModal(title, description, imageUrl, features = []) {
+            roomModalTitle.textContent = title;
+            roomModalDescription.textContent = description;
+            modalImageDisplay.src = imageUrl;
+            roomModalFeatures.innerHTML = '';
+            if (features.length > 0) {
+                features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.textContent = feature.trim();
+                    roomModalFeatures.appendChild(li);
+                });
+                roomModalFeatures.style.display = 'block';
+            } else {
+                roomModalFeatures.style.display = 'none';
+            }
+            roomDetailsModalOverlay.classList.add('active');
+        }
+
+        document.querySelectorAll('.show-room-details').forEach(button => {
+            button.addEventListener('click', function () {
+                const title = this.dataset.roomTitle;
+                const description = this.dataset.roomDescription;
+                const imageUrl = this.closest('div').querySelector('img').src;
+                const features = this.dataset.roomFeatures.split(',');
+                openModal(title, description, imageUrl, features);
+            });
+        });
+
+        roomDetailsModalClose.addEventListener('click', () => {
+            roomDetailsModalOverlay.classList.remove('active');
+        });
+
+        roomDetailsModalOverlay.addEventListener('click', function (e) {
+            if (e.target === roomDetailsModalOverlay) {
+                roomDetailsModalOverlay.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
